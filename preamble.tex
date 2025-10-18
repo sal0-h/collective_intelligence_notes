@@ -1,0 +1,88 @@
+% ------------------------------
+% Packages
+% ------------------------------
+\usepackage{graphicx}      % For including images
+\usepackage{amsmath}       % Advanced math typesetting
+\usepackage{amssymb}       % Math symbols (e.g., \mathbb, \leqslant, etc.)
+\usepackage{amsthm}        % Theorem/lemma environments
+\usepackage{stmaryrd}      % Extra math symbols (e.g., semantic brackets ⟦ ⟧)
+\usepackage[short]{datetime} % Date formatting
+\usepackage{caption}       % Custom captions for figures/tables
+\usepackage{subcaption}    % Subfigures (side-by-side images)
+\usepackage{multicol}      % Multi-column layout (e.g., notes, problems)
+\setlength{\columnseprule}{1pt} % Vertical line between columns
+\usepackage{soul}          % Highlighting (\hl{})
+\sethlcolor{yellow}        % Highlight color
+\usepackage[margin=1.75cm]{geometry} % Page margins
+
+% ------------------------------
+% Theorem Environments
+% ------------------------------
+\theoremstyle{definition} % Non-italic style for definitions/remarks
+\newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{property}[theorem]{Property}      % Shares counter with theorem
+\newtheorem{proposition}[theorem]{Proposition} % Shares counter with theorem
+
+% ------------------------------
+% Custom Math Commands
+% ------------------------------
+% Vectors (boldface)
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\uu}{\mathbf{u}}
+\newcommand{\rr}{\mathbf{r}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\aaa}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\cc}{\mathbf{c}}
+\newcommand{\0}{\mathbf{0}}
+\newcommand{\ii}{\mathbf{i}}
+\newcommand{\jj}{\mathbf{j}}
+\newcommand{\kk}{\mathbf{k}}
+
+
+% Transformations / Matrices
+\newcommand{\Tx}{T(\xx)}
+\newcommand{\Ai}{A^{-1}}   % Inverse
+\newcommand{\At}{A^{T}}    % Transpose
+
+% Spaces
+\newcommand{\Rn}{\mathbb{R}^n}
+\newcommand{\Rm}{\mathbb{R}^m}
+\newcommand{\Pn}{\mathbb{P}_n} % Polynomials of degree ≤ n
+\newcommand{\mxn}{m \times n}  % Matrix dimensions
+
+% Subspaces
+\newcommand{\Col}{\mathrm{Col}\;}  % Column space
+\newcommand{\Row}{\mathrm{Row}\;}  % Row space
+\newcommand{\Nul}{\mathrm{Nul}\;}  % Null space
+\newcommand{\Span}{\mathrm{Span}\;} % Span
+\newcommand{\rank}{\mathrm{rank}\;} % Rank
+
+% Bases / Coordinate systems
+\newcommand{\BB}{\mathcal{B}}  % Basis B
+\newcommand{\CC}{\mathcal{C}}  % Basis C
+\newcommand{\cB}{[\xx]_\BB}    % Coordinates of x in basis B
+\newcommand{\cC}{[\xx]_\CC}    % Coordinates of x in basis C
+\newcommand{\xB}[1]{[#1]_\BB}  % Custom coord notation (input)
+\newcommand{\xC}[1]{[#1]_\CC}  % Custom coord notation (input)
+\newcommand{\pb}{P_\BB}        % Projection onto basis B
+\newcommand{\pbc}{P_{\CC \leftarrow \BB}} % Change of basis B → C
+\newcommand{\pcb}{P_{\BB \leftarrow \CC}} % Change of basis C → B
+
+\newcommand{\samplevec}{\aaa = \langle a_1, a_2, a_3 \rangle}
+
+\newcommand{\parx}{\frac{\partial z}{\partial x}}
+\newcommand{\pary}{\frac{\partial z}{\partial y}}
+
+
+% Matrix shortcuts
+\newcommand{\matAI}{$\begin{bmatrix}A & I\end{bmatrix}$} % Augmented matrix [A|I]
+
+
+\newcommand{\vect}[2]{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}
