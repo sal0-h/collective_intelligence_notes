@@ -9,6 +9,8 @@
 \usepackage{amsmath} % For math environments
 \usepackage{tcolorbox}
 \usepackage{array}
+\usepackage{xcolor}
+\definecolor{chaptergreen}{HTML}{1B8110}
 
 \makeatletter
 \def\chapter{\@ifstar\@schapter\@chapter}
@@ -16,12 +18,15 @@
   \refstepcounter{chapter}%
   \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
   \chaptermark{#1}%
-  {\par\vspace{2em}\centering\LARGE\bfseries Chapter \thechapter\\#1\par\vspace{1em}}%
+  {\par\vspace{2em}\centering\LARGE\bfseries
+   \textcolor{chaptergreen}{Chapter \thechapter\\#1}\par\vspace{1em}}%
 }
 \def\@schapter#1{%
-  {\par\vspace{1em}\centering\LARGE\bfseries #1\par\vspace{1em}}%
+  {\par\vspace{1em}\centering\LARGE\bfseries
+   \textcolor{chaptergreen}{#1}\par\vspace{1em}}%
 }
 \makeatother
+
 
 \input{preamble}
 \title{15-382 Collective Intelligence}
@@ -48,6 +53,7 @@ SH
 \input{chapters/networks}
 \input{chapters/swarm_intelligence}
 \input{chapters/pso}
-\include{chapters/robot}
+\input{chapters/robot}
+\input{chapters/task_allocation}
 
 \end{document}
