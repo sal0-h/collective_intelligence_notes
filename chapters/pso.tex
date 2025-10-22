@@ -1,0 +1,82 @@
+\chapter*{Particle Swarm Optimization (PSO)}
+
+Multi-agent black-box optimization framework inspired by
+social and roosting behavior of flocking birds
+
+\section*{Background: Boids!}
+
+Realistic model of coordinated animal motion, agents follow three simple rules:
+\begin{enumerate}
+    \item Separation: steer to avoid crowding local flockmates
+    \item Alignment: steer towards the average heading of local flockmates 
+    \item Cohesion: steer to move toward the average position of local flockmates
+\end{enumerate}
+
+Later, a \textbf{roost} was added. An attraction point in a simplified
+Boids-like simulation, such that each agent
+
+\begin{enumerate}
+    \item Is attracted to the location of the roost 
+    \item Remembers where it was closer to it 
+    \item Tells its gang about its closest location to the roost
+\end{enumerate}
+
+Eventually, (almost) all agents will land on the roost.
+
+What if the roost is the unknown global optimum (min/max) of a mathematical 
+function? And the "distance to the roost" is simply the quality of the function's value at that point?
+
+\section*{Black-box optimization with PSO}
+
+We do not know the formula for $f(x)$. All we can do is 
+"query" the function: provide an input $x$ and observe the output $f(x)$. 
+We must find the optimum by intelligently sampling the search space.
+
+PSO is a derivative-free, black-box optimization algorithm.
+
+\section*{Core Mechanic (In Words)}
+
+Swarm of particles are made, each particle $i$ represents a potential solution. 
+
+\begin{itemize}
+    \item Position $\xx_i \in \Rn$: Candidate solution of particle
+    \item Velocity $\vv_i \in \Rn$: Current direction and speed of particle 
+\end{itemize}
+
+Each particle also has a memory:
+\begin{itemize}
+    \item pbest, position with the best $f(x)$ particle $i$ ever visited
+    \item gbest, position with the best $f(x)$ any particle ever visited
+\end{itemize}
+
+At each time step, the particle updates its velocity and position based on 
+3 influences:
+\begin{enumerate}
+    \item Inertia component: keep going where its going already
+    \item Personal component: pull towards pbest 
+    \item Social Component: pull towards gbest 
+\end{enumerate}
+
+\section*{Core Mechanic (In Math) :)}
+\textbf{Velocity Update:} 
+\[
+\vv_i(t+1) = \omega \vv_i(t) + c_1 r_1 (pbest_i - \xx_i(t)) + c_2 r_2 (gbest_i - \xx_i(t))
+\]
+where 
+\begin{itemize}
+    \item $\omega$ is inertia weight (influence of old velocity)
+    \item $c_1,c_2$ are acceleration coefficients (weighting the "pull" of the personal and social components).
+    \item $r_1,r_2$ are random numbers, adding stochasticity to the search.
+\end{itemize}
+
+\textbf{Position Update:} 
+Just move. 
+\[
+\xx_i(t+1) = \xx_i(t) + \vv_i(t+1)
+\]
+
+\section*{Parameters and Variants}
+
+\textbf{What if only one agent?}
+If left alone, each individual agent would behave like a stochastic hill-climber when moving
+in the direction of a local optimum, and then it will have a quite hard time to escape it
