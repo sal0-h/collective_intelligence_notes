@@ -1,0 +1,57 @@
+\section*{Robots, or if you fancy: Cyber-Physical Multi-Agent Systems (CP MAS)}
+Systems of multiple interacting cyber-physical agents (robots, sensors) combining mechatronic structures, communication, and processing.
+
+\subsection*{The near-future vision is of "Robots Everywhere"}
+
+\subsection*{Design Objectives of Robot Swarms}
+\begin{itemize}
+    \item \textbf{Scalability:} Performance should degrade gracefully as swarm size increases.
+    \item \textbf{Robustness:} Tolerance to individual robot failures or environmental changes.
+    \item \textbf{Flexibility / Adaptability:} Ability to handle different tasks or environments.
+    \item \textbf{Distributed Control:} No single point of failure; decision-making is local.
+\end{itemize}
+\subsection*{Swarm Intelligence Design Approach}
+The primary design paradigm is bottom-up:
+
+\begin{itemize}
+    \item Relatively simple individual controllers.
+    \item Relatively complex interaction patterns.
+    \item Relies mostly on locality of interactions and communications (decentralized and distributed).
+    \item Leverages emergence and self-organization.
+\end{itemize}
+
+\subsection*{Downsides of Swarm Design}
+The complexity leads to challenges:
+\begin{itemize}
+    \item Predictability and formal guarantees of swarm behavior can be challenging.
+    \item Finite-time performance is often hard to characterize.
+    \item Efficiency might be mediocre when heavily relying on full decentralization and self-organization.
+\end{itemize}
+
+\subsection*{CPMAS Taxonomy}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{@{}l|X|X@{}}
+\toprule
+\textbf{Feature} & \textbf{can be:} & \textbf{or can be:} \\ \midrule
+Members & Homogeneous (interchangeable units) & Heterogeneous (units with different skills/capabilities) \\ \addlinespace
+Coupling & Loosely coupled (agents operate independently; cooperation optional — e.g., speedup) & Tightly coupled (agents depend on each other; require coordination/cooperation) \\ \addlinespace
+Goals & Non-cooperative (agents maximize individual utility; equilibrium concepts apply) & Cooperative (agents maximize a global objective; social welfare / optimization concepts) \\ \addlinespace
+Control & Centralized control (single decision authority or planner) & Decentralized / distributed control (local decision-making; peer-to-peer coordination) \\ \addlinespace
+Coordination \& Planning & Explicit (direct communication or sharing of plans among agents) & Implicit (coordination emerges through actions that influence others without direct communication) \\
+\end{tabularx}
+\caption{\small\emph{Note:} The entries are \emph{independent} options used to describe a system; real systems may combine any of these (e.g., a heterogeneous but loosely coupled group, or a homogeneous yet tightly coupled group).}
+\label{tab:multiagent-taxonomy}
+\end{table}
+
+\subsection*{Core issue:} Communications are fundamental but face issues:
+
+\begin{itemize}
+    \item Global schemes won't scale for large swarms.
+    \item Need for ad hoc networking in infrastructure-less environments (e.g., post-disaster).
+    \item Challenges in deciding what to communicate, how frequently, and to whom.
+\end{itemize}
+
+\subsection*{AntHocNet:} An example of managing a Mobile Ad Hoc Network (MANET) using a hybrid Ant Colony Optimization (ACO) approach. It uses ant agents to set up full paths (reactive) and local information exchange to maintain and improve them (proactive).
+

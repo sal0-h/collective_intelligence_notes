@@ -1,0 +1,441 @@
+\documentclass{report}
+\usepackage{hyperref} % For clickable links and bookmarks
+\usepackage{bookmark}
+
+\usepackage{booktabs}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage{amsmath} % For math environments
+\usepackage{tcolorbox}
+\usepackage{array}
+\input{preamble} % Assuming your preamble.tex contains all the custom commands/packages
+
+\setlength{\parindent}{0pt} % Ensure that no indent is added
+
+\title{15-382 Collective Intelligence}
+\date{First Edition}
+\author{Salman Hajizada}
+
+\begin{document}
+\maketitle
+
+\setcounter{chapter}{-1}
+\chapter*{Disclaimer}
+This document aims to summarize the content of the slides for 15-382, including
+what the author considers important. As always, the definition of important is
+highly subjective so the author might have omitted something that was
+important to another person, or included something that is trivial to another.\\
+
+Good luck,
+
+SH
+
+\chapter*{Dynamical Systems}
+
+\section*{Fingerprints of Complex Systems}
+
+\begin{itemize}
+    \item Multi-agent / multi-component
+    \item Decentralized
+    \item Local interactions
+    \item Dynamic
+\end{itemize}
+
+\section*{Types of Abstract Models:}
+
+\begin{itemize}
+    \item \textbf{Agent-based:} mechanistic implemtation of the multi-compenent interactions
+    \item \textbf{Mathematical (white-box)}: formally descibe the relations among the relevant components.
+    \item \textbf{Black-box:}: Input-output pairs from the system are used to predict the output for a given input, or to tweak the internal parameters to get the desired output, no attempt made to understand how the system works on the inside
+    \item \textbf{Statistical:} describing patterns and correlations betwen variables
+\end{itemize}
+
+\section*{Systems of ODEs}
+Here is a system of $n\ge1$ Ordinary Differential Equations
+
+\begin{align*}
+\frac{dx_{1}}{dt}&=f_{1}(\mathbf{x}(t))\\
+\frac{dx_{2}}{dt}&=f_{2}(\mathbf{x}(t))\\
+&\vdots \\
+\frac{dx_{n}}{dt}&=f_{n}(\mathbf{x}(t))
+\end{align*}
+where $\mathbf{x}(t)$ is an n-dim vector.
+
+A continuous-time Dynamical System is defined by a system of differential equations:
+\[
+\frac{d\mathbf{x}(t)}{dt} = \mathbf{f}(\mathbf{x}, t; \theta)
+\]
+where $\mathbf{f}: \mathbb{R}^{n} \rightarrow \mathbb{R}^{n}$ is a vector field. If $\mathbf{f}$ does not explicitly depend on $t$, it is an \textbf{Autonomous System}: $\frac{d\mathbf{x}}{dt} = \mathbf{f}(\mathbf{x})$.
+
+\section*{Linear Systems ($\mathbf{f}(\mathbf{x}) = A\mathbf{x}$)}
+The simplest case, where $\mathbf{f}$ is linear:
+\[
+\frac{d\mathbf{x}}{dt} = A\mathbf{x}(t), \quad \mathbf{x} \in \mathbb{R}^{n}, \quad A \text{ is an } n \times n \text{ coefficient matrix}
+\]
+
+\subsection*{General Solution of Linear ODEs}
+The general solution is a linear combination of exponentials:
+\[
+\mathbf{x}(t) = c_1 e^{\lambda_1 t} \mathbf{u}_1 + c_2 e^{\lambda_2 t} \mathbf{u}_2 + \dots + c_n e^{\lambda_n t} \mathbf{u}_n
+\]
+where $\lambda_i$ is an \textbf{eigenvalue} and $\mathbf{u}_i$ is the corresponding \textbf{eigenvector} of matrix $A$.
+
+Alternatively, using the Matrix Exponential:
+\[
+\mathbf{x}(t) = e^{At}\mathbf{x}(0)
+\]
+
+\subsection*{Critical Points (Equilibrium Points)}
+A critical point $\mathbf{x}_{\text{eq}}$ is a constant solution where the system's velocity is zero:
+\[
+\mathbf{f}(\mathbf{x}_{\text{eq}}) = \mathbf{0} \implies \frac{d\mathbf{x}}{dt} \Big|_{\mathbf{x} = \mathbf{x}_{\text{eq}}} = \mathbf{0}
+\]
+For a linear system $A\mathbf{x}=\mathbf{0}$, the origin $\mathbf{x}_{\text{eq}}=\mathbf{0}$ is always a critical point if $\det(A) \ne 0$ (non-singular matrix).
+
+\subsection*{Stability Analysis for 2D Linear Systems}
+The stability and type of critical point at the origin are determined entirely by the \textbf{eigenvalues} of $A$.
+
+\textbf{1. Real Eigenvalues ($r_1 \ne r_2$)}
+\begin{itemize}
+  \item \textbf{Node} if $r_1, r_2$ have the same sign.
+    \begin{itemize}
+      \item \textbf{Stable Node} if $r_1, r_2 < 0$. $\mathbf{x}(t) \to \mathbf{0}$ as $t \to \infty$.
+      \item \textbf{Unstable Node} if $r_1, r_2 > 0$. $\mathbf{x}(t) \to \infty$ as $t \to \infty$.
+    \end{itemize}
+  \item \textbf{Saddle Point} if $r_1, r_2$ have opposite signs ($r_1 < 0 < r_2$ or $r_2 < 0 < r_1$).
+    \begin{itemize}
+      \item \textbf{Unstable}. Trajectories approach $\mathbf{0}$ along the stable eigenvector and diverge along the unstable eigenvector.
+    \end{itemize}
+\end{itemize}
+
+\textbf{2. Repeated Real Eigenvalues ($r_1 = r_2 = r$)}
+\begin{itemize}
+  \item \textbf{Stable Proper/Improper Node or Star} if $r < 0$.
+  \item \textbf{Unstable Proper/Improper Node or Star} if $r > 0$.
+\end{itemize}
+
+\textbf{3. Complex Eigenvalues with Nonzero Real Part (Spiral / Focus)}
+\[
+\lambda_{1,2} = a \pm bi
+\]
+\textbf{Behavior:}
+\begin{itemize}
+  \item \textbf{Stable Spiral} if $a < 0$. Trajectories spiral inward, approaching $\mathbf{0}$.
+  \item \textbf{Unstable Spiral} if $a > 0$. Trajectories spiral outward, diverging from $\mathbf{0}$.
+\end{itemize}
+
+\textbf{4. Pure Imaginary Eigenvalues (Center)}
+\[
+\lambda_{1,2} = \pm i\omega
+\]
+\textbf{Behavior:}
+\begin{itemize}
+  \item Trajectories are closed orbits (circles or ellipses).
+  \item Neither converge nor diverge --- \textbf{neutrally stable}.
+\end{itemize}
+
+\section*{Non-Linear Systems $\frac{d\mathbf{x}}{dt} = \mathbf{f}(\mathbf{x})$}
+
+\textbf{Challenge:} A closed-form solution for non-linear systems is often very difficult or unfeasible to derive.
+
+\subsection*{Local Stability Analysis via Linearization}
+To analyze a non-linear system around an equilibrium point $\mathbf{x}_{\text{eq}}$, we use \textbf{Linearization}:
+
+\begin{enumerate}
+    \item \textbf{Find Equilibrium Points} ($\mathbf{x}_{\text{eq}}$) by solving $\mathbf{f}(\mathbf{x}) = \mathbf{0}$.
+    \item \textbf{Compute the Jacobian Matrix} $J(\mathbf{x})$:
+    \[
+    J_{ij}(\mathbf{x}) = \frac{\partial f_i}{\partial x_j}
+    \]
+    \item \textbf{Evaluate the Jacobian} at the equilibrium point, $J(\mathbf{x}_{\text{eq}})$.
+    \item \textbf{Find the Eigenvalues} of $J(\mathbf{x}_{\text{eq}})$ and use the linear stability rules to determine the local behavior (Node, Saddle, Spiral, Center).
+\end{enumerate}
+
+\begin{itemize}
+    \item \textbf{Center Manifold Theorem}: If the linearization results in a \textbf{Center} (pure imaginary eigenvalues), the linearization is \textbf{inconclusive} because the stability depends on higher-order, non-linear terms.
+\end{itemize}
+
+\subsection*{Bifurcations}
+A \textbf{bifurcation} is a qualitative change in the topological structure of a system's flow as a parameter is varied.
+
+\begin{itemize}
+    \item \textbf{Saddle-Node (Fold) Bifurcation:} Two equilibrium points collide (one stable, one unstable) and annihilate, or are created from nothing.
+    \item \textbf{Transcritical Bifurcation:} Two equilibrium points exist, and they swap their stability as they pass through each other.
+    \item \textbf{Pitchfork Bifurcation:} A single equilibrium point splits into three (two stable/unstable, one saddle), or vice versa.
+    \item \textbf{Hopf Bifurcation:} An equilibrium point changes from a stable to an unstable spiral, leading to the creation of a stable, self-sustaining oscillation called a \textbf{limit cycle}.
+\end{itemize}
+
+\subsection*{Chaos and Strange Attractors}
+\begin{itemize}
+    \item \textbf{Chaos:} Bounded, non-periodic behavior in a deterministic system that exhibits \textbf{Sensitive Dependence on Initial Conditions (SDIC)}.
+    \item \textbf{SDIC:} Means that arbitrarily small differences in initial conditions lead to exponentially diverging trajectories over time.
+    \item \textbf{Strange Attractor:} An attractor that is \textbf{fractal} (has a non-integer dimension) and exhibits chaotic dynamics.
+\end{itemize}
+
+\textbf{Fractal Dimension} (e.g., Box-counting dimension):
+\[
+D = \lim_{\epsilon \to 0} \frac{\log N(\epsilon)}{\log(1/\epsilon)}
+\]
+where $N(\epsilon)$ is the minimum number of boxes of side $\epsilon$ needed to cover the object.
+
+\chapter*{Discrete Dynamical Systems (Iterated Maps) \& CAs}
+
+\section*{Discrete Dynamical Systems (Iterated Maps)}
+The general form of a discrete dynamical system (iterated map) is:
+\[
+\mathbf{x}_n = \mathbf{f}(\mathbf{x}_{n-1})
+\]
+For a 1D map: $x_n = f(x_{n-1})$.
+
+\subsection*{Fixed Points and Stability}
+\begin{itemize}
+    \item \textbf{Fixed Point} ($\mathbf{x}^{*}$): $\mathbf{x}^{*} = \mathbf{f}(\mathbf{x}^{*})$
+    \item \textbf{1D Stability:} Determined by the derivative:
+    \begin{itemize}
+        \item $\left|f'(x^*)\right| < 1$: \textbf{Stable} (attracting).
+        \item $\left|f'(x^*)\right| > 1$: \textbf{Unstable} (repelling).
+    \end{itemize}
+    \item \textbf{Higher-D Stability:} Determined by \textbf{Jacobian eigenvalues ($\lambda_i$)}:
+    \begin{itemize}
+        \item \textbf{Stable} if $|\lambda_i| < 1$ for \textbf{all} eigenvalues.
+    \end{itemize}
+\end{itemize}
+
+\subsection*{The Logistic Map and Chaos}
+The Logistic Map: $x_{n+1} = r x_n (1 - x_n)$.
+\begin{itemize}
+    \item Exhibits \textbf{period-doubling bifurcations} leading to \textbf{chaos} as parameter $r$ increases.
+\end{itemize}
+
+\textbf{Lyapunov Exponent ($\lambda$):} Long-term average exponential rate of separation between nearby trajectories.
+\[
+\lambda = \lim_{n \to \infty} \frac{1}{n} \sum_{i=0}^{n-1} \ln |f'(x_i)|
+\]
+\begin{itemize}
+    \item $\lambda < 0$: Stable.
+    \item $\lambda > 0$: \textbf{Chaotic} (SDIC is present).
+\end{itemize}
+
+\section*{Cellular Automata (CAs)}
+A discrete dynamical system that evolves in \textbf{discrete space} and \textbf{discrete time}.
+\begin{itemize}
+    \item \textbf{Local Transition Rule ($\mathbf{f}$):} $s_i(t+1) = f(\{s_j(t) : j \in N_i \})$, where $N_i$ is the neighborhood of cell $i$.
+    \item \textbf{Elementary CAs:} 1D, binary state, radius $r=1$ ($2^8=256$ rules).
+\end{itemize}
+
+\subsection*{Wolfram's Classification}
+\begin{itemize}
+    \item \textbf{Class I (Fixed Point):} Converge quickly to a uniform, stable state.
+    \item \textbf{Class II (Periodic):} Converge to simple, separated periodic structures.
+    \item \textbf{Class III (Chaotic):} Generate pseudo-random, chaotic patterns (e.g., Rule 30).
+    \item \textbf{Class IV (Complex):} Produce complex, localized structures (particles) capable of \textbf{universal computation} (e.g., Rule 110, Game of Life).
+\end{itemize}
+
+\subsection*{Conway's Game of Life (2D CA)}
+\begin{itemize}
+    \item \textbf{Survival (Live cell):} 2 or 3 live neighbors.
+    \item \textbf{Birth (Dead cell):} Exactly 3 live neighbors.
+    \end{itemize}
+
+\chapter*{Networks}
+
+\section*{Key Network Properties}
+\begin{itemize}
+    \item \textbf{Degree ($k$):} Number of connections a node has.
+    \item \textbf{Degree Distribution ($P(k)$):} Probability that a randomly selected node has degree $k$.
+    \item \textbf{Path Length ($h$):} Number of edges in the shortest path between two nodes. \textbf{Average Path Length} ($\bar{h}$).
+    \item \textbf{Clustering Coefficient ($C$):} Measures the likelihood that a node's neighbors are also neighbors of each other. $C_i = \frac{\text{Number of edges between neighbors of } i}{\text{Max possible edges between neighbors of } i}$.
+\end{itemize}
+
+\section*{Network Models}
+\begin{itemize}
+    \item \textbf{Erdős–Rényi (ER) Random Graph:}
+    \begin{itemize}
+        \item \textbf{Properties:} Poisson $P(k)$ (homogeneous), very low $C$ ($\approx 0$), \textbf{small world} (short $\bar{h}$).
+        \item \textbf{Message:} Too random to explain real-world networks.
+    \end{itemize}
+    \item \textbf{Watts–Strogatz (WS) Small World:}
+    \begin{itemize}
+        \item \textbf{Mechanism:} Starts as a regular lattice, rewires edges with probability $p$.
+        \item \textbf{Properties:} High $C$ + short $\bar{h}$ (\textbf{small-world effect}).
+        \item \textbf{Weakness:} Still has a homogeneous degree distribution (no hubs).
+    \end{itemize}
+    \item \textbf{Barabási–Albert (BA) Scale-Free:}
+    \begin{itemize}
+        \item \textbf{Mechanism:} \textbf{Growth} (new nodes added) + \textbf{Preferential Attachment} (new nodes connect preferentially to existing nodes with high degree).
+        \item \textbf{Properties:} \textbf{Power Law} degree distribution ($P(k) \sim k^{-\gamma}$), formation of \textbf{hubs}.
+        \item \textbf{Message:} Growth + Preferential Attachment are key drivers of real networks.
+    \end{itemize}
+\end{itemize}
+
+\section*{Network Centrality Measures}
+Measures for quantifying a node's importance/power.
+\begin{itemize}
+    \item \textbf{Degree Centrality ($C_D$):} The number of direct links a node has. $C_D(i) = k_i$.
+    \item \textbf{Closeness Centrality ($C_C$):} How close a node is to all other nodes.
+    \[
+    C_C(i) = \frac{N-1}{\sum_{j=1}^{N} d(i,j)} \quad (\text{Inverse of average distance})
+    \]
+    \item \textbf{Betweenness Centrality ($C_B$):} How often a node lies on the shortest path between other pairs of nodes (broker/gatekeeper role).
+    \item \textbf{Eigenvector Centrality ($C_E$):} Importance proportional to the importance of its neighbors (a node is important if its neighbors are also important).
+    \[
+    \lambda \mathbf{c} = A\mathbf{c} \quad (\mathbf{c} \text{ is the eigenvector of } A \text{ corresponding to the largest eigenvalue } \lambda)
+    \]
+    \item \textbf{PageRank:} The probability that a random web-surfer will land on a page (steady-state probability).
+    \[
+    PR(A) = \frac{1-d}{N} + d \sum_{i \in B_A} \frac{PR(i)}{L(i)}
+    \]
+    $d$: damping factor (probability of following a link), $B_A$: set of pages linking to $A$, $L(i)$: number of out-links from page $i$.
+\end{itemize}
+
+\chapter*{Swarm Intelligence and Optimization}
+
+\section*{Stigmergy}
+\begin{itemize}
+    \item \textbf{Stigmergy:} Any form of \textbf{indirect communication} among distributed agents through acts of local modification of the environment and local sensing of the outcomes (e.g., pheromones).
+    \item Best analogy: Blackboard/Post-it style asynchronous communication.
+\end{itemize}
+
+\section*{Particle Swarm Optimization (PSO)}
+Bio-inspired, collective intelligence meta-heuristic for continuous, multimodal optimization.
+
+\subsection*{PSO Algorithm Core}
+Each particle $i$ has: \textbf{Position} ($\mathbf{x}_i$), \textbf{Velocity} ($\mathbf{v}_i$), \textbf{Personal Best} ($\mathbf{pBest}_i$), and \textbf{Global Best} ($\mathbf{gBest}$).
+
+\textbf{Velocity Update Equation:}
+\begin{align*}
+\mathbf{v}_i(t+1) = & \underbrace{\omega \mathbf{v}_i(t)}_{\text{Inertia}} + \underbrace{c_1 r_1 (\mathbf{pBest}_i - \mathbf{x}_i(t))}_{\text{Cognitive (Own Experience)}} + \underbrace{c_2 r_2 (\mathbf{gBest} - \mathbf{x}_i(t))}_{\text{Social (Swarm Experience)}}
+\end{align*}
+\begin{itemize}
+    \item $\omega$: Inertia weight (influences balance between exploration/exploitation).
+    \item $c_1, c_2$: Acceleration coefficients.
+    \item $r_1, r_2$: Uniform random numbers in $[0, 1]$.
+\end{itemize}
+
+\textbf{Position Update Equation:}
+\[
+\mathbf{x}_i(t+1) = \mathbf{x}_i(t) + \mathbf{v}_i(t+1)
+\]
+
+\subsection*{Hybrid PSO (HPSO)}
+\begin{itemize}
+    \item \textbf{Concept:} Combines cooperative PSO exploration with a highly specialized \textbf{Local Search (LS)} intensification.
+    \item \textbf{Process:} Run PSO for global exploration, then use LS (e.g., gradient descent) on the $\mathbf{gBest}$ and a few top $\mathbf{pBest}$ particles to exploit local minima, then share the improved results back to the swarm.
+\end{itemize}
+
+\section*{Ant Colony Optimization (ACO)}
+Stigmergy-based meta-heuristic for combinatorial optimization (e.g., Traveling Salesperson Problem, TSP).
+
+\subsection*{ACO Core}
+\begin{itemize}
+    \item \textbf{Ants (Agents):} Probabilistically construct solutions by moving from node to node.
+    \item \textbf{Pheromone ($\tau_{ij}$):} Stigmergic variable on edges $(i, j)$. High $\tau$ means high attraction.
+    \item \textbf{Heuristic Information ($\eta_{ij}$):} Problem-specific local information, often inverse of distance ($1/d_{ij}$).
+\end{itemize}
+
+\textbf{Probabilistic Transition Rule:} The probability of an ant moving from $i$ to $j$ is proportional to:
+\[
+P_{ij} \propto (\tau_{ij})^\alpha (\eta_{ij})^\beta
+\]
+\begin{itemize}
+    \item $\alpha$: controls the weight of pheromone influence.
+    \item $\beta$: controls the weight of heuristic influence.
+\end{itemize}
+
+\textbf{Pheromone Update:}
+\begin{enumerate}
+    \item \textbf{Evaporation (Decay):} $\tau_{ij} \leftarrow (1-\rho) \tau_{ij}$ ($\rho$ is the evaporation rate). Prevents convergence to sub-optimal paths.
+    \item \textbf{Deposition (Reward):} Pheromone is added by ants that have completed a path, proportional to the quality of the solution found (e.g., inverse of path length).
+\end{enumerate}
+
+\chapter*{Robot Swarms and Task Allocation}
+
+\section*{Cyber-Physical Multi-Agent Systems (CP MAS)}
+Systems of multiple interacting cyber-physical agents (robots, sensors) combining mechatronic structures, communication, and processing.
+
+\subsection*{Design Objectives of Robot Swarms}
+\begin{itemize}
+    \item \textbf{Scalability:} Performance should degrade gracefully as swarm size increases.
+    \item \textbf{Robustness:} Tolerance to individual robot failures or environmental changes.
+    \item \textbf{Flexibility / Adaptability:} Ability to handle different tasks or environments.
+    \item \textbf{Distributed Control:} No single point of failure; decision-making is local.
+\end{itemize}
+
+\section*{Multi-Robot Task Allocation (MRTA)}
+The problem of deciding \textbf{who} (which robot) does \textbf{what} (which task) and \textbf{where/when/how}.
+
+\subsection*{MRTA Taxonomy (ST-SR-IA)}
+This taxonomy classifies task allocation problems based on three binary dimensions:
+\begin{itemize}
+    \item \textbf{Single-Task (ST) vs. Multi-Task (MT):} Can a robot execute one task type or multiple task types?
+    \item \textbf{Single-Robot (SR) vs. Multi-Robot (MR):} Does a task require one robot or a team/coalition?
+    \item \textbf{Instantaneous Assignment (IA) vs. Time-Extended Assignment (TA):} Static, one-time assignment vs. sequential, time-dependent planning/scheduling.
+\end{itemize}
+
+The \textbf{ST-SR-IA} problem is the simplest, involving a one-to-one assignment, optimally solved by the \textbf{Hungarian Algorithm} (a form of Linear Assignment Problem).
+
+\subsection*{Complex MRTA Cases and Modeling}
+
+The complexity of MRTA problems increases significantly when moving from instantaneous, single-robot assignments to multi-robot, time-extended scenarios. The table below maps these complex cases to the canonical optimization models they are equivalent to.
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[h]
+    \centering
+    \caption{MRTA Taxonomy: Complex Cases and Equivalent Optimization Models}
+    \begin{tabular}{|c|c|l|l|}
+    \hline
+    \textbf{Robots} & \textbf{Tasks} & \textbf{Assignment Type} & \textbf{Equivalent Optimization Model} \\
+    \hline
+    \textbf{ST-SR-TA} & Single $\to$ Single & Time-Extended & \textbf{Traveling Salesperson Problem (TSP)} \\
+    \hline
+    \textbf{MT-SR-IA} & Multi $\to$ Single & Instantaneous & \textbf{Generalized Assignment Problem (GAP)} \\
+    \hline
+    \textbf{ST-MR-IA} & Single $\to$ Multi & Instantaneous & \textbf{Set Covering Problem (SCP)} or \textbf{Set Partitioning} \\
+    \hline
+    \textbf{MT-SR-TA} & Multi $\to$ Single & Time-Extended & \textbf{TSP} or \textbf{Vehicle Routing Problem (VRP)} \\
+    \hline
+    \textbf{ST-MR-TA} & Single $\to$ Multi & Time-Extended & \textbf{Equivalent to MT-SR-TA} (Scheduling + Coalition) \\
+    \hline
+    \textbf{MT-MR-TA} & Multi $\to$ Multi & Time-Extended & \textbf{Job Shop Scheduling Problem} (Multi-Proc. Tasks) \\
+    \hline
+    \end{tabular}
+    \label{tab:mrta_models}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{MT-SR-TA (Multi-Task, Single-Robot, Time-Extended):} Requires a single robot to determine the optimal sequence of tasks to execute over time. This is a classic scheduling problem, directly modeled as a \textbf{Traveling Salesperson Problem (TSP)} or its variations like the \textbf{Vehicle Routing Problem (VRP)}.
+    \item \textbf{ST-MR-IA (Single-Task, Multi-Robot, Instantaneous):} The task requires a group/coalition of robots. The problem is to cover all required tasks (coalitions) with the available robots at minimum cost/maximum utility. This maps to the \textbf{Set Covering Problem (SCP)}.
+    \item \textbf{MT-MR-TA (Multi-Task, Multi-Robot, Time-Extended):} The most general and complex case, involving simultaneous scheduling, routing, and coalition formation for multiple tasks and robots.
+\end{itemize}
+
+\subsection*{Solution Approaches in MRTA}
+
+MRTA problems are generally \textbf{NP-hard}, meaning that heuristic and meta-heuristic approaches are often required, especially for large, dynamic systems.
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[h]
+    \centering
+    \caption{Comparison of Task Allocation Solution Approaches}
+    \begin{tabular}{|m{2cm}|m{4cm}|m{4cm}|m{2.5cm}|}
+    \hline
+    \textbf{Approach} & \textbf{Advantage} & \textbf{Limitation} & \textbf{Best Case Scenario} \\
+    \hline
+    \textbf{Emergent/Swarm} & Self-organizing; scalable; reduces central control complexity. & Lacks explicit optimality guarantees; sensitive to parameter tuning. & Systems requiring only local coordination (e.g., foraging, aggregation). \\
+    \hline
+    \textbf{Optimization} & Provides optimal or near-optimal solutions; well-suited for static scenarios. & Computationally intensive (NP-hard problems); less adaptable to changes. & Well-defined, static problems (e.g., initial ST-SR-IA). \\
+    \hline
+    \textbf{Market-Based} & Flexible, scalable, decentralized via bidding (e.g., MURDOCH/auction). & May not yield global optima; requires effective bidding and communication. & Dynamic environments with varying tasks; heterogeneous robot teams. \\
+    \hline
+    \textbf{Learning-Based} & Adaptable; learns and improves over time in uncertain environments (e.g., RL). & Requires extensive training time; initially sub-optimal; high computational cost for training. & Complex and uncertain environments where performance must be learned through experience. \\
+    \hline
+    \end{tabular}
+    \label{tab:mrta_approaches}
+\end{table}
+
+\textbf{Optimization Solution Methods (for Centralized Models):}
+\begin{itemize}
+    \item \textbf{Exact Methods:} Solving Integer Programming (IP) formulations to optimality using commercial solvers (e.g., Branch-and-Bound with MIP gap) or polynomial-time algorithms for special cases (e.g., Hungarian Algorithm for ST-SR-IA).
+    \item \textbf{Heuristics/Meta-Heuristics:} Using approximation algorithms like ACO, PSO, or Genetic Algorithms (GA) to find high-quality, near-optimal solutions in a reasonable amount of time.
+\end{itemize}
+
+\end{document}
