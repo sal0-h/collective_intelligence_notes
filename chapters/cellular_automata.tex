@@ -2,15 +2,15 @@
 
 \section*{CA properties}
 
-A \textbf{Cellular Automaton} is a multi-dimensional discrete-time dynamical 
-system that is defined by 
-the principle of locality. properties: 
+A \textbf{Cellular Automaton} is a multi-dimensional discrete-time dynamical
+system that is defined by
+the principle of locality. properties:
 
 \begin{description}
     \item[Systems's state is $n$-dimensional] $\xx(t) = (x_1(t), \dots, x_n(t))$
-    \item[Discrete time]: updated at discrete time steps 
-    \item[State components arranged according to a given topology] 
-    \item[Neighborhood defined based on topology]: $N(x_i) = 
+    \item[Discrete time]: updated at discrete time steps
+    \item[State components arranged according to a given topology]
+    \item[Neighborhood defined based on topology]: $N(x_i) =
     {x_j : x_j \text{ is a neighbor of }x_i}$
 
     Neighborhood is the range for a cell to be influenced by other cells
@@ -23,11 +23,11 @@ the principle of locality. properties:
         \item Moore: The cell and its 8 surrounding neighbors (a 3x3 box).
     \end{itemize}
 
-    \item[Locality of updates]: Each state component $x_i$ evolves according to a rule 
+    \item[Locality of updates]: Each state component $x_i$ evolves according to a rule
     that depends only on its own state and those of its neighbors in $N(x_i)$.
 
     Local-state transition function, $F_i: S(N(x_i)) \to S_i$ where $S_i$
-    s the set of values that state component $x_i$ can take, 
+    s the set of values that state component $x_i$ can take,
     and $S$ is the state values from the cells in the neighborhood set.
 
     \item[Initial Conditions]: state at $t=0$
@@ -45,7 +45,7 @@ the principle of locality. properties:
 
 \section*{Updating Schedules:}
 \begin{itemize}
-    \item Synchronous Updating: At time t, all cells read the states of 
+    \item Synchronous Updating: At time t, all cells read the states of
     their neighbors. Then, they all compute their next state. Finally, all cells update their state simultaneously to begin step $t+1$.
     \item Asynchronous Updating: Cells update one at a time or in random groups. The order matters. A cell updating later in the step will see the already updated states of its neighbors who updated earlier.
 \end{itemize}
@@ -55,14 +55,14 @@ We assume they are homogeneous (same lattice, same N, and same rule F for all ce
 and use synchronous updating.
 
 \textbf{Combinatorics}
-Let: 
+Let:
 \begin{itemize}
-    \item $k = |S|$ is the number of states per cell 
-    \item $M$ is the number of cells 
+    \item $k = |S|$ is the number of states per cell
+    \item $M$ is the number of cells
     \item $r$ is the range ($floor(|N(a)|/2)$)
 \end{itemize}
 
-Then: 
+Then:
 \begin{itemize}
     \item Number of possible state configs: $k^{M}$
     \item Number of possible neighborhood configurations: $k^{|N|}$
@@ -100,7 +100,7 @@ Using our formula, the number of rules = $k^{\left(k^{|N|}\right)} = 2^{\left(2^
 \section*{Game of Life}
 
 \begin{itemize}
-    \item 2D Lattice of identical cells 
+    \item 2D Lattice of identical cells
     \item Moore neighborhood
     \item 2 states: dead or alive
     \item The 4 Rules:
@@ -113,3 +113,5 @@ Using our formula, the number of rules = $k^{\left(k^{|N|}\right)} = 2^{\left(2^
     \item Garden of Eden: A pattern that can only exist as initial pattern. In other
 words, no parent could possibly produce the pattern.
 \end{itemize}
+
+\vspace{1cm}
