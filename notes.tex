@@ -140,7 +140,7 @@ A solution is a function $\xx(t)$ that satisfies the vector field $A$.
     \item Together they yield one solution: $\xx(t) = \uu_i e^{\lambda_i t}$
     \item Each distinct eigen-pair gives ONE independent vector solution
     \item The general solution is then the combination of these terms: 
-    $\xx(t) = c_1 e^{a_1 t} \uu_1 + \dots + c_n e^{a_n t} \uu_n$ (at most n terms)
+    $\xx(t) = c_1 e^{\lambda_1 t} \uu_1 + \dots + c_n e^{\lambda_n t} \uu_n$ (at most n terms)
 \end{enumerate}
 
 Important: the above is strictly true only if all eigenvalues are distinct
@@ -161,10 +161,10 @@ At each point, the solution \textbf{mixes} the modes.
 
 \section*{Equilibrium points}
 
-A state $\xx^e$ is an equilibrium state of a system $\dot\xx = \mathbf{f}(\xx)$ if 
-when at a time $t_0$ the sytem is at $\xx^e$ then it stays there FOREVER
+A state $\xx_e$ is an equilibrium state of a system $\dot\xx = \mathbf{f}(\xx)$ if 
+when at a time $t_0$ the sytem is at $\xx_e$ then it stays there FOREVER
 
-Why? Velocity of the field in $\xx^e$ is null: $\mathbf{f}(\xx^e) = 0$
+Why? Velocity of the field in $\xx_e$ is null: $\mathbf{f}(\xx_e) = 0$
 \\
 
 For a linear ODE, the equilibrium points are the points of the \textbf{Null Space} (solutions to $A \xx = 0$)
@@ -322,6 +322,140 @@ $r_{1,2} = \pm i\mu$ & Center & Neutrally stable \\
 \hline
 \end{tabular}
 
+\section*{Perturbations}
 
+For Pure Imaginary Eigenvalue,  
+small perturbations add a tiny real part to the eigenvalues:
+
+\begin{itemize}
+    \item $\lambda > 0$ (positive real part) $\implies$ trajectories spiral outward (unstable spiral).
+    \item $\lambda < 0$ (negative real part) $\implies$ trajectories spiral inward (stable spiral).
+\end{itemize}
+
+For Repeated Real Eigenvalues
+
+\begin{itemize}
+    \item If the eigenvectors are linearly independent, the system stays a node, but may change to a saddle if the signs differents.
+    \item If the eigenvectors are linearly dependent, it will become a spiral.
+\end{itemize}
+
+\section*{Linearization around a Critical Point}
+
+Consider a nonlinear system:
+\[
+\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}), \quad \mathbf{x} \in \mathbb{R}^n
+\]
+
+Let $\mathbf{x}_0$ be a critical point: $\mathbf{f}(\mathbf{x}_0) = 0$.
+
+\textbf{Step 1: Linear Approximation}
+
+\[
+\mathbf{f}(\mathbf{x}) \approx \mathbf{f}(\mathbf{x}_0) + J_{\mathbf{f}}(\mathbf{x}_0)(\mathbf{x} - \mathbf{x}_0)
+\]
+
+Since $\mathbf{f}(\mathbf{x}_0) = 0$, the linearized system is
+\[
+\dot{\mathbf{x}} \approx J_{\mathbf{f}}(\mathbf{x}_0) (\mathbf{x} - \mathbf{x}_0), \quad
+\mathbf{y} = \mathbf{x} - \mathbf{x}_0
+\]
+
+\textbf{Step 2: Jacobian Matrix}
+
+\[
+J_{\mathbf{f}}(\mathbf{x}_0) =
+\begin{bmatrix}
+\frac{\partial f_1}{\partial x_1} & \cdots & \frac{\partial f_1}{\partial x_n} \\
+\vdots & \ddots & \vdots \\
+\frac{\partial f_n}{\partial x_1} & \cdots & \frac{\partial f_n}{\partial x_n} 
+\end{bmatrix}_{\mathbf{x} = \mathbf{x}_0}
+\]
+
+\textbf{Step 3: Eigenvalues, Eigenvectors, and General Solution}
+
+Compute eigenvalues $\lambda_i$ and eigenvectors $\mathbf{v}_i$ of $J_{\mathbf{f}}(\mathbf{x}_0)$.  
+The general solution of the linearized system is
+\[
+\mathbf{y}(t) = \sum_{i=1}^n c_i e^{\lambda_i t} \mathbf{v}_i, \quad
+\mathbf{x}(t) = \mathbf{x}_0 + \mathbf{y}(t)
+\]
+
+\textbf{Step 4: Stability Analysis}
+
+Analyze how you would analyze a normal linear system.
+
+\section*{Global Behavior and Nullclines}
+
+\begin{itemize}
+  \item \textbf{Basin of Attraction:} set of all initial conditions that 
+  \item \textbf{Separatrix:} boundary between different basins of attraction 
+  eventually lead a trajectory to the same stable equilibrium point 
+  \item \textbf{Isoline:} set of points where a function takes the same value 
+  \item \textbf{Isocline:} set of points where a function has the same \textbf{slope}
+  \item \textbf{Nullcline:} set of point where a function has the same \textbf{null slope}
+\end{itemize}
+
+Nullcline fun facts:
+\begin{enumerate}
+  \item The $x$-nullcline is curve where $\dot\xx = 0$, the $y$-nullcline is curve where $\dot\yy = 0$
+  \item On $x$-nullcline, the vector field can only point vertically (no horizontal motion).
+  \item On $y$-nullcline, the vector field can only point horizontally (no vertical motion).
+  \item Equilibrium points are exaclty at the intersection of the nullclines
+  \item Nullclines divide the phase space into regions. In each region, the 
+  sign of $\dot\xx$ and $\dot\yy$ is constant.
+
+\end{enumerate}
+
+\section*{Limit cycles}
+
+\textbf{A periodic orbit} is just any trajectory that forms a closed loop.
+
+\textbf{A limit cycle} is an isolated closed trajectory. 
+This means neighboring trajectories are not closed; they either spiral into the limit cycle (a stable limit cycle) or spiral away from it (an unstable limit cycle).
+There's also mixed scenarios (half-stable)
+
+Example: Van der Pol Oscillator
+
+\section*{2D is Boring}
+
+\begin{theorem}
+Any closed trajectory muyst encolse at least one equilibrium
+\end{theorem}
+\begin{theorem}{Poincare-Bendixson Theorem:}
+
+IF a trajectory is trapped in a closed, bounded region R,
+
+AND this region R contains no equilibrium points,
+
+THEN the trajectory must eventually approach a limit cycle.
+\end{theorem}
+
+In other words, 2D systems cannot have chaos 
+
+\section*{Chaos and Strange Attractors}
+
+3 main types of attractors: Fixed Points, Limit Cycles and Strange Attractors (the last 
+appears only in 3D+)
+
+Properties of strange attractors:
+\begin{itemize}
+  \item Sensitive dependence on initial conditions: two initial conditions very 
+  close to each other become very far apart as time goes on (but remain confined in the set 
+  that defines the attractor)
+  \item Fractal dimensions (e.g. $2.06$). Non-integer
+\end{itemize}
+
+\textbf{Example: Lorenz Attractor}
+\begin{enumerate}
+  \item For a parameter r=21, trajectories spiral into one of two stable fixed points.
+  \item For r=28, the fixed points become unstable. Trajectories are still 
+  bounded, but they never settle down. They move from one "wing" of the 
+  attractor to the other in an aperiodic, unpredictable way.
+\end{enumerate}
+
+\begin{definition}
+Chaos: \textbf{aperiodic long-term behavior} in a \textbf{deterministic} system that exhibits 
+\textbf{sensitive dependence on initial conditions}
+\end{definition}
 
 \end{document}
