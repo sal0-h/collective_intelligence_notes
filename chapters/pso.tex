@@ -46,6 +46,8 @@ Swarm of particles are made, each particle $i$ represents a potential solution.
 Each particle also has a memory:
 \begin{itemize}
     \item pbest, position with the best $f(x)$ particle $i$ ever visited
+    \item lbest, position with the best $f(x)$ any particle in $i$th social 
+    neighborhood ever visited (will be used later)
     \item gbest, position with the best $f(x)$ any particle ever visited
 \end{itemize}
 
@@ -79,4 +81,60 @@ Just move.
 
 \textbf{What if only one agent?}
 If left alone, each individual agent would behave like a stochastic hill-climber when moving
-in the direction of a local optimum, and then it will have a quite hard time to escape it
+in the direction of a local optimum, and then it will have a quite hard time to escape it.
+
+\textbf{Neighborhood Topology} 
+
+There's no clear way tp know which topology is best. 
+
+\begin{itemize}
+    \item gbest (Global Best): Leads to fast convergence but can get trapped in local optima.
+    \item lbest (Local Best): Each particle is pulled toward the best solution found by its immediate topological neighbors. Slower but explores the space more effectively, making it better for complex, multi-modal problems.
+\end{itemize}
+
+\textbf{Acceleration Coefficients}
+
+The balance between $c_1, c_2$ two defines the swarm's search strategy:
+
+\begin{itemize}
+    \item $c_1 > 0, c_2 = 0$: (Independent). No social influence, set of independent hill climbers 
+    \item $c_1 = 0, c_2 > 0$: (Social-only). No personal memory, entire swarm is pulled 
+    only towards single best-known point. One stochastic hill-climber 
+    \item $c_1 = c_2 > 0$: Attracted to average of pbest, gbest 
+    \item $c_2 > c_1$: (More Social). Better for unimodal problems
+    \item $c_1 > c_2$ (More Personal). Better for multimodal problems
+\end{itemize}
+
+\textbf{Inertia Coefficient}
+
+The weight was added to control balance between exploration and exploitation:
+
+\begin{itemize}
+    \item $\omega \ge 1$: velocities increase over time, swarm diverges. Exploration.
+    \item $0 < \omega < 1$: particles decelerate, convergence depends on $c_1, c_2$. Explotation.
+\end{itemize}
+
+Constriction Coefficient: idk what this is, TODO understand it.
+
+\textbf{Fully Informed PSO (FIPS)}\\
+Like \textbf{lbest}, FIPS uses neighborhood information, but more democratically. 
+Instead of moving toward the single best particle, a particle is attracted to a 
+weighted average of all neighbors' personal bests. This slows convergence slightly 
+but reduces the chance of getting stuck in local optima.
+
+\vspace{0.5em}
+\textbf{Binary / Discrete PSO}\\
+PSO can be adapted for binary search spaces ($\mathbf{x}_i \in \{0,1\}^n$):
+\begin{itemize}
+    \item Velocity $\mathbf{v}_i$ is continuous and updated normally.
+    \item Each component $v_{ij}$ is interpreted as the probability of a 1.
+    \item Probability is computed via a sigmoid: $s(v_{ij}) = 1/(1+e^{-v_{ij}})$.
+    \item Positions are updated stochastically:
+    \[
+        x_{ij}(t+1) = 
+        \begin{cases} 
+            1 & \text{if rand() < } s(v_{ij}(t+1)) \\ 
+            0 & \text{otherwise} 
+        \end{cases}
+    \]
+\end{itemize}
