@@ -1,0 +1,208 @@
+\chapter*{Networks}
+
+\section*{Basic Graph Theory, Terminology, Properties}
+
+\textbf{Graph:} two sets $(V, E)$ of vertices/nodes and 
+edges/arcs/links 
+
+Can be directed (interaction flows one way) or undirected (interaction flows both ways)
+
+For Undirected graphs:
+\begin{itemize}
+    \item Node degree $k_i$: number of edges adjacent to 
+    node $i$
+    \item Handshake theorem: let $L$ be the number of edges.
+    Then $L = \frac{1}{2}\sum_{i=1}^{N}k_i$
+    \item Average degree: $\langle k \rangle = \frac{2L}{N}$
+\end{itemize}
+
+For Directed Graphs:
+\begin{itemize}
+    \item In-degree: number of edges going into node 
+    \item Out-degree: number of edges going out of the node 
+    \item Total degree $k_i = k_i^\text{in} + k_i^\text{out}$
+    \item Average degree (either in or out): $\frac{L}{N}$
+\end{itemize}
+
+\textbf{Degree Distribution:} $p_k = \frac{N_k}{N}$ where $N_k$ is number of 
+nodes with degree $k$
+
+In real networks degree distribution is highly heterogeneous
+
+\textbf{Complete graph:} every possible edge is there. $L = \frac{N(N-1)}{2}$
+
+In real networks, the number of edges is way less than that.
+
+
+\begin{itemize}
+    \item \textbf{Walk:} A sequence of vertices (and corresponding edges) such that consecutive vertices are adjacent. 
+    Vertices and edges may repeat. For example, $(1 \to 2 \to 1)$ is a valid walk.
+
+    \item \textbf{Path:} A walk in which all vertices (and therefore all edges) are distinct. 
+    For example, $(1 \to 2 \to 3)$ is a path, but $(1 \to 2 \to 1)$ is not.
+
+    \item \textbf{Length:} The number of edges in a walk or path, or the sum of their weights if the graph is weighted.
+
+    \item \textbf{Distance:} The length of the shortest path between two vertices. 
+    In unweighted graphs, this equals the minimal number of hops; in weighted graphs, the minimal total weight.
+
+    \item \textbf{Shortest Path:} A path whose length equals the distance between its endpoints.
+
+    \item \textbf{Diameter:} The maximum distance between any two vertices in the graph; equivalently, 
+    the length of the longest shortest path.
+\end{itemize}
+
+\textbf{Connected graph} is an undirected graph where there exists a path between 
+every pair of nodes
+
+For directed graphs there is 
+\begin{itemize}
+    \item Strongly connected if for every pair there is a path 
+    \item Weakly connected if every pair there is a path \textbf{when you
+    ignore edge directions}
+\end{itemize}
+
+If the largest component in a graph has a large fraction of the nodes,
+we call it the giant component
+
+\section*{Two representations for graphs}
+
+\begin{enumerate}
+    \item Adjacency list: a mapping from each node to it's neighborhood
+    \item Adjacency matrix: $N \times N$ matrix $A$ such that $A_{ij} = 1$ if link 
+    $(i, j)$ exists, and $0$ otherwise. 
+\end{enumerate}
+
+\textbf{More about adjacency matrices}
+\begin{enumerate}
+    \item For undirected graphs they are symmetric
+    \item Number of walks between nodes $i, j$ can be calculated as follows:
+        $(A^l)_{ij}$ gives $\#$walks of length $l$.
+\end{enumerate}
+
+\section*{Some measures}
+
+\textbf{Average path length:}
+\[
+h = \frac{1}{2E_{\text{max}} \sum_{i, j \ne i}h_{ij}}
+\]
+where $h_ij$ is the distance from $i$ to $j$ and $E_{\text{max}} = n(n-1)/2$
+
+\textbf{Clustering Coefficient}
+
+Let $L_i$  be the number of links between neighbors of $i$. 
+Then the clustering coefficient of node $i$ is 
+\[
+c_i = \frac{2L_i}{k_i(k_i - 1)}
+\]
+
+\textbf{Global clustering coefficient:} $C = \frac{1}{N}\sum_{i=1}^{N}c_i$
+
+\section*{Properties of real networks}
+Real networks are: 
+\begin{itemize}
+    \item Scale-free (from $p_k$): they have hubs
+    \item Small world (from $h$): average distance is very small 
+    \item Locally dense (from $C$): clustering is very high
+\end{itemize}
+
+We will try to have a process that can create a network with these properties 
+
+\section*{Model 1: Erdos-Renyi (ER)} I DO NOT CAREEEEE ABOUT THE DOTS ABOVE THEIR NAMES 
+
+
+\textbf{Generative process:} each of the $\binom{N}{2}$ possible edges, an edge is created with 
+probability $p$
+\textbf{Degree Distribution:} 
+\[
+p_k = \binom{N-1}{k}p^k (1-p)^{N-1-k}
+\]
+Mean degree is $\bar{k} = p(N-1)$, Variance is $(N-1)p(1-p)$
+
+For large, sparse networks that simplifies to Poisson distribution:
+\[
+p_k = e^{-\bar{k}} \frac{\bar{k}^k}{k!}
+\]
+
+\textbf{Clustering Coefficient:} $E[C] = p = \frac{\bar{k}}{N-1}$, i.e. small
+
+\textbf{Average path length} grows as: $O(\log N)$
+
+\textbf{Verdict:}
+\begin{enumerate}
+    \item Scale-free: NO, $p_k$ is Poisson (should be power law)
+    \item Small world: YES, low $h$
+    \item Locally dense: NO, $C$ is very low (should be high)
+\end{enumerate}
+
+\section*{Model 2: Watts-Strogatz (WS) (Small World)}
+
+This model was made to fix the clustering problem. 
+
+\textbf{Generative process:}
+\begin{enumerate}
+    \item Start with a regular ring lattice, where each node is connected to 
+    $m$ nearest neighbors. Graph starts with high $C$ and $h$
+    \item Go through each edge, and with prob $p$ rewire one end of the edge 
+    to a randomly chosen node. 
+\end{enumerate}
+
+What happens for different p?
+\begin{itemize}
+    \item $p = 0$: Just a regular lattice, high $C$ and $h$
+    \item $p = 1$: Just a random graph, low $C$ and $h$
+    \item $p = 0.01$: A few rewired links act as shortcuts, dropping 
+    $h$ dramatically (to around $log N$), while keeping a high $C$
+\end{itemize}
+
+\textbf{Verdict:}
+\begin{enumerate}
+    \item Scale-free: NO, $p_k$ is peaked at around $m$
+    \item Small world: YES, low $h$
+    \item Locally dense: YES, $C$ is high 
+\end{enumerate}
+
+We are almost there
+
+\section*{Model 3: Barabasi-Albert (BA) Scale-Free Model}
+
+\textbf{Generative Process}
+
+Two main new mechanisms:
+
+\begin{enumerate}
+    \item \textbf{Growth:} The network is not a fixed size. It starts with a small "seed" 
+    network, and at each time step, a new node is added.
+    \item \textbf{Preferential Attachment:} New node connects to $m$ existing nodes. 
+    The probability $\Pi(i)$ of it connecting to an existing node $i$ is not uniform. 
+    It is proportional to that node's current degree $k_i$:
+    \[
+    \Pi(i) = \frac{k_i}{\sum_{j}k_j}
+    \]
+\end{enumerate}
+
+Rich get richer, rich nodes have higher chance of getting new links
+
+\textbf{Verdict:}
+\begin{enumerate}
+    \item Scale-free: YES, naturally produces a power-law degree distribution ($p_k$ around $k^{-3}$)
+    \item Small world: YES, low $h$
+    \item Locally dense: KINDA, $C$ is a typically lower than in real networks
+\end{enumerate}
+
+\section*{Summary of Network Models}
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{8pt}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Model} & \textbf{Scale-Free?} & \textbf{Small World?} & \textbf{High Clustering?} \\
+\hline
+Erdos-Renyi (ER) & No & Yes & No \\
+Watts-Strogatz (WS) & No & Yes & Yes \\
+Barabasi-Albert (BA) & Yes & Yes & Kinda \\
+\hline
+\end{tabular}
+\end{table}
