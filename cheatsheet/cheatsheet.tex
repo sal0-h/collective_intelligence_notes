@@ -1,0 +1,345 @@
+\documentclass[8pt,a4paper,twocolumn]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[left=0.5cm,right=0.5cm,top=0.5cm,bottom=0.5cm]{geometry}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{listings}
+\usepackage{booktabs} % For \toprule, \midrule, \bottomrule
+\usepackage{array} % For better column spacing in complex columns (optional but good practice)
+
+% Adjust font size
+\renewcommand{\normalsize}{\fontsize{8}{8}\selectfont}
+% --- Preamble ---
+\setlength{\parindent}{0pt} % This removes paragraph indentation
+
+% Optional but Recommended: Add space between paragraphs for readability
+% Otherwise, it's hard to tell where one paragraph ends and the next begins
+% \usepackage{parskip} % This package automatically adds vertical space between paragraphs
+% Adjust section formatting
+\usepackage{titlesec}
+\titleformat{\section}{\normalfont\bfseries}{\thesection.}{0.5em}{}
+\titlespacing{\section}{0pt}{*1}{*0.5}
+\usepackage{bm}
+\newcommand\bigcdot{\bm{\cdot}}
+% Adjust font size
+% \renewcommand{\normalsize}{\fontsize{12}{10}\selectfont}
+% --- Preamble ---
+% \input{preamble}
+% ------------------------------
+% Custom Math Commands
+% ------------------------------
+% Vectors (boldface)
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\yy}{\mathbf{y}}
+\newcommand{\uu}{\mathbf{u}}
+\newcommand{\rr}{\mathbf{r}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\aaa}{\mathbf{a}}
+\newcommand{\bb}{\mathbf{b}}
+\newcommand{\cc}{\mathbf{c}}
+\newcommand{\ee}{\mathbf{e}}
+\newcommand{\0}{\mathbf{0}}
+\newcommand{\ii}{\mathbf{i}}
+\newcommand{\jj}{\mathbf{j}}
+\newcommand{\kk}{\mathbf{k}}
+
+
+% Transformations / Matrices
+\newcommand{\Tx}{T(\xx)}
+\newcommand{\Ai}{A^{-1}}   % Inverse
+\newcommand{\At}{A^{T}}    % Transpose
+
+% Spaces
+\newcommand{\Rn}{\mathbb{R}^n}
+\newcommand{\Rm}{\mathbb{R}^m}
+\newcommand{\Pn}{\mathbb{P}_n} % Polynomials of degree ≤ n
+\newcommand{\mxn}{m \times n}  % Matrix dimensions
+
+% Subspaces
+\newcommand{\Col}{\mathrm{Col}\;}  % Column space
+\newcommand{\Row}{\mathrm{Row}\;}  % Row space
+\newcommand{\Nul}{\mathrm{Nul}\;}  % Null space
+\newcommand{\Span}{\mathrm{Span}\;} % Span
+\newcommand{\rank}{\mathrm{rank}\;} % Rank
+
+% Bases / Coordinate systems
+\newcommand{\BB}{\mathcal{B}}  % Basis B
+\newcommand{\CC}{\mathcal{C}}  % Basis C
+\newcommand{\cB}{[\xx]_\BB}    % Coordinates of x in basis B
+\newcommand{\cC}{[\xx]_\CC}    % Coordinates of x in basis C
+\newcommand{\xB}[1]{[#1]_\BB}  % Custom coord notation (input)
+\newcommand{\xC}[1]{[#1]_\CC}  % Custom coord notation (input)
+\newcommand{\pb}{P_\BB}        % Projection onto basis B
+\newcommand{\pbc}{P_{\CC \leftarrow \BB}} % Change of basis B → C
+\newcommand{\pcb}{P_{\BB \leftarrow \CC}} % Change of basis C → B
+
+\newcommand{\samplevec}{\aaa = \langle a_1, a_2, a_3 \rangle}
+
+\newcommand{\parx}{\frac{\partial z}{\partial x}}
+\newcommand{\pary}{\frac{\partial z}{\partial y}}
+
+
+% Matrix shortcuts
+\newcommand{\matAI}{$\begin{bmatrix}A & I\end{bmatrix}$} % Augmented matrix [A|I]
+
+
+\newcommand{\vect}[2]{\begin{pmatrix} #1 \\ #2 \end{pmatrix}}
+
+\setlength{\parindent}{0pt} % This removes paragraph indentation
+
+
+\begin{document}
+
+\section*{Dynamical Systems (ODEs)}
+A continuous-time dynamical system is defined by a system of $n$ ODEs: $\dot{\xx} = \mathbf{f}(\xx, t; \theta)$, where $\xx \in \Rn$.
+
+\begin{itemize}
+    \item \textbf{Equilibrium Point $\xx_e$}: A state where the system does not change, i.e., $\mathbf{f}(\xx_e) = 0$.
+    \item \textbf{Linear System}: A system of the form $\dot\xx = A \xx$.
+\end{itemize}
+
+\section*{Solving Linear Systems: $\dot\xx = A \xx$}
+\begin{enumerate}
+    \item Find eigenvalues $\lambda_i$ by solving the characteristic equation: $\det(A - \lambda I) = 0$.
+    \item For each eigenvalue $\lambda_i$, find the corresponding eigenvector $\uu_i$ by solving $(A - \lambda_i I)\uu_i = \0$.
+    \item The general solution is a linear combination of the "straight-line" solutions: 
+    \[ \xx(t) = \sum_{i=1}^n c_i e^{\lambda_i t} \uu_i \]
+    The constants $c_i$ are determined by the initial conditions $\xx(0)$.
+\end{enumerate}
+
+\section*{Stability of Equilibria}
+Stability for a linear system's equilibrium at the origin (or for a nonlinear system's equilibrium $\xx_e$ based on its Jacobian $J$) is determined by the eigenvalues $\lambda = \alpha \pm i\beta$.
+\begin{itemize}
+    \item \textbf{Asymptotically Stable}: All eigenvalues have real parts $\alpha < 0$. All nearby solutions converge to the equilibrium.
+    \item \textbf{Stable}: All eigenvalues have $\alpha \le 0$. No real parts are positive, and any with $\alpha=0$ (purely imaginary) are simple. Nearby solutions stay nearby, but don't necessarily converge (e.g., centers).
+    \item \textbf{Unstable}: At least one eigenvalue has a real part $\alpha > 0$. Most nearby solutions will move away.
+\end{itemize}
+
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Eigenvalues} & \textbf{Type} \\
+\midrule
+$\lambda_1, \lambda_2$ real, distinct & \\
+\quad $\lambda_1, \lambda_2 < 0$ & \textbf{Stable Node} (All paths head to origin) \\
+\quad $\lambda_1, \lambda_2 > 0$ & \textbf{Unstable Node} (All paths leave origin) \\
+\quad $\lambda_1 \cdot \lambda_2 < 0$ & \textbf{Saddle} (Unstable) \\
+$\lambda_1 = \lambda_2$ real, repeated & \textbf{Node} (Stable if $\lambda < 0$, Unstable if $\lambda > 0$) \\
+$\lambda = \alpha \pm i\beta$ (where $\beta \ne 0$) & \\
+\quad $\alpha < 0$ & \textbf{Stable Spiral} (Spiral into the origin) \\
+\quad $\alpha > 0$ & \textbf{Unstable Spiral} (Spiral away from the origin) \\
+\quad $\alpha = 0$ & \textbf{Center} (Neutrally Stable, paths are closed orbits) \\
+\bottomrule
+\end{tabular}
+
+\section*{Nonlinear Systems: $\dot\xx = \mathbf{f}(\xx)$}
+\begin{itemize}
+    \item \textbf{Linearization}: To analyze the stability of an equilibrium point $\xx_e$, we linearize the system using the \textbf{Jacobian matrix} $J = J_{\mathbf{f}}(\xx_e)$, where $J_{ij} = \frac{\partial f_i}{\partial x_j}$.
+    \item We then analyze the stability of the linear system $\dot\uu = J \uu$, where $\uu = \xx - \xx_e$.
+    \item \textbf{Hartman-Grobman Theorem}: The stability of the linearized system (based on $J$'s eigenvalues) usually determines the stability of the nonlinear system, except for marginal cases (like $\alpha=0$ centers).
+\end{itemize}
+
+\section*{Other 2D+ Concepts}
+\begin{itemize}
+    \item \textbf{Nullclines}: Curves in the phase space where one component of the vector field is zero (e.g., $\dot{x}=0$ or $\dot{y}=0$). Equilibrium points occur at the intersections of *all* nullclines.
+    \item \textbf{Limit Cycle}: A stable, isolated, closed-orbit trajectory. Solutions nearby may spiral into or away from a limit cycle.
+    \item \textbf{Poincar\'e-Bendixson Theorem}: In a 2D continuous system, the only possible long-term behaviors are approaching an equilibrium point, approaching a limit cycle, or diverging to infinity. This theorem implies that \textbf{chaos cannot occur in 2D continuous systems}.
+    \item \textbf{Chaos}: Aperiodic, long-term behavior in a deterministic system that exhibits sensitive dependence on initial conditions. Associated with \textbf{Strange Attractors} (e.g., Lorenz Attractor) and requires \textbf{3 or more dimensions} for continuous systems.
+\end{itemize}
+
+
+\section*{Iterated Maps (Discrete-Time Systems)}
+A discrete-time system: $x_{n+1} = f(x_n)$. The sequence $x_0, x_1, x_2, \dots$ is the \textbf{orbit}.
+\begin{itemize}
+    \item \textbf{Fixed Point $x^*$}: A point that maps to itself, $f(x^*) = x^*$.
+    \item \textbf{Stability of Fixed Points}: Determined by the multiplier $\lambda = f'(x^*)$.
+    \begin{itemize}
+        \item $|\lambda| < 1$: \textbf{Stable} (attracting). Orbits starting near $x^*$ converge to it.
+        \item $|\lambda| > 1$: \textbf{Unstable} (repelling). Orbits starting near $x^*$ (but not exactly on it) move away.
+        \item $|\lambda| = 1$: \textbf{Marginal case} (e.g., $f'(x^*) = -1$ leads to a bifurcation).
+    \end{itemize}
+    \item \textbf{Cobweb Plot}: A graphical method to visualize orbits. Draw a line from $(x_n, x_n)$ to $(x_n, f(x_n))$, then horizontally to $(f(x_n), f(x_n)) = (x_{n+1}, x_{n+1})$, and repeat.
+\end{itemize}
+
+\section*{Logistic Map}
+The canonical example of a route to chaos: $x_{n+1} = r x_n (1 - x_n)$.
+\begin{itemize}
+    \item As the parameter $r$ increases (from 0 to 4), the system's long-term behavior changes.
+    \item It moves from a single stable fixed point, to a stable 2-cycle, then a 4-cycle, 8-cycle, etc. This is the \textbf{period-doubling bifurcation} route to chaos.
+    \item Past a certain $r$, the system becomes chaotic, with regions of stability ("islands") interspersed.
+\end{itemize}
+
+\section*{Lyapunov Exponent}
+Measures the average exponential rate of divergence or convergence of nearby orbits, quantifying sensitivity to initial conditions.
+\[ 
+ \lambda = \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \ln|f'(x_k)| 
+\]
+\begin{itemize}
+    \item $\lambda > 0 \implies$ \textbf{Chaos}. Nearby orbits diverge exponentially.
+    \item $\lambda < 0 \implies$ \textbf{Stable}. Nearby orbits converge.
+    \item $\lambda = 0 \implies$ Marginal.
+\end{itemize}
+
+\section*{Cellular Automata (CA)}
+Discrete-time, discrete-space, discrete-state systems where cells update their state based on a \textbf{local rule} applied to their \textbf{neighborhood}.
+\begin{itemize}
+    \item \textbf{Neighborhood}: Set of cells that influence a cell's next state.
+        \item \textit{Von Neumann}: 4 neighbors (N, S, E, W).
+        \item \textit{Moore}: 8 neighbors (all adjacent cells).
+    \item \textbf{Update Schedule}:
+        \item \textit{Synchronous}: All cells update simultaneously.
+        \item \textit{Asynchronous}: Cells update one at a time (e.g., in a random order).
+    \item \textbf{Combinatorics}: For $k$ states and a neighborhood of size $|N|$, the total number of possible rules is $k^{(k^{|N|})}$.
+    \item \textbf{Wolfram's 1D CA}: $k=2, |N|=3$ (cell + left/right neighbors) $\implies 2^{(2^3)} = 256$ possible rules.
+\end{itemize}
+
+\section*{Wolfram's 4 Classes of Behavior}
+\begin{enumerate}
+    \item \textbf{Class 1 (Stable)}: Evolves to a stable, homogeneous state (e.g., all black or all white).
+    \item \textbf{Class 2 (Periodic)}: Evolves to simple periodic structures (e.g., stable patterns or simple oscillators).
+    \item \textbf{Class 3 (Chaotic)}: Exhibits chaotic, aperiodic, fractal-like patterns (e.g., Rule 30).
+    \item \textbf{Class 4 (Complex)}: Exhibits complex, localized structures ("gliders") that move and interact. Can support computation (e.g., Rule 110 is Turing complete).
+\end{enumerate}
+
+\section*{Conway's Game of Life (2D CA)}
+A famous 2D CA with a Moore neighborhood and 2 states (live/dead).
+\begin{itemize}
+    \item \textbf{Survival}: A live cell with exactly 2 or 3 live neighbors survives.
+    \item \textbf{Death}: A live cell with $<2$ neighbors (loneliness) or $>3$ neighbors (overcrowding) dies.
+    \item \textbf{Reproduction}: A dead cell with exactly 3 live neighbors becomes alive.
+\end{itemize}
+
+\section*{Networks}
+Networks (graphs) consist of nodes (vertices) and edges (links).
+
+\section*{Key Properties of Real Networks}
+\begin{itemize}
+    \item \textbf{Small-World}: Low average path length $h$. The average distance between any two nodes is short, typically $h \sim O(\log N)$.
+    \item \textbf{High Clustering}: High clustering coefficient $C$. A node's neighbors are also likely to be neighbors of each other.
+    \item \textbf{Scale-Free}: The degree distribution $p_k$ (probability a node has $k$ links) follows a power-law, $p_k \sim k^{-\gamma}$. This implies a few "hubs" with many links and many nodes with few links.
+\end{itemize}
+
+\section*{Network Models}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Model} & \textbf{Scale-Free?} & \textbf{Small-World?} & \textbf{High C?} \\
+\midrule
+\textbf{Erdos-Renyi (ER)} & No & Yes & No \\
+\textbf{Watts-Strogatz (WS)} & No & Yes & Yes \\
+\textbf{Barabasi-Albert (BA)} & Yes & Yes & Kinda \\
+\bottomrule
+\end{tabular}
+\begin{itemize}
+    \item \textbf{Erdos-Renyi (ER)}: A random graph. Start with $N$ nodes, connect every pair with probability $p$. Degree distribution $p_k$ is Poisson (peaked).
+    \item \textbf{Watts-Strogatz (WS)}: The "small-world" model. Start with a regular ring lattice (high C, high $h$), and "rewire" each edge with probability $p$. This quickly lowers $h$ while retaining high $C$.
+    \item \textbf{Barabasi-Albert (BA)}: The "scale-free" model. Built via two mechanisms:
+        \begin{enumerate}
+            \item \textbf{Growth}: Start with a small network, add one node at a time.
+            \item \textbf{Preferential Attachment}: New nodes prefer to link to existing nodes that already have a high degree ("rich get richer").
+        \end{enumerate}
+\end{itemize}
+
+\section*{Centrality Measures}
+Ways to quantify a node's "importance" in a network.
+\begin{itemize}
+    \item \textbf{Degree}: Number of connections. Simple count of a node's "popularity".
+    \item \textbf{Betweenness}: Fraction of all shortest paths in the network that pass through this node. Identifies "bridges" or "bottlenecks".
+    \item \textbf{Closeness}: Inverse of the average shortest-path distance to all other nodes. Measures how "central" a node is or how fast it can reach everyone.
+    \item \textbf{Eigenvector}: A node's importance is determined by the importance of its neighbors. A node is important if it's connected to other important nodes. Solved by finding the principal eigenvector of the adjacency matrix $A$: $A\cc = \lambda\cc$.
+    \item \textbf{Alpha-Centrality}: A generalization that includes a node's intrinsic importance: $\cc = \beta(I - \alpha A)^{-1}\ee$.
+\end{itemize}
+
+\section*{Optimization}
+
+\section*{Gradient Descent (GD)}
+An iterative algorithm to find a local minimum of a function $f(\ww)$ by repeatedly moving in the direction of the negative gradient, $-\nabla f(\ww)$.
+\[ 
+ \ww_{k+1} = \ww_k - \alpha \nabla f(\ww_k) 
+\]
+Where $\alpha$ is the \textbf{learning rate}.
+
+\begin{itemize}
+    \item \textbf{Batch GD}: Calculate $\nabla f$ using the entire dataset. Very accurate gradient, but computationally slow for large datasets.
+    \item \textbf{Stochastic GD (SGD)}: Calculate $\nabla f$ using only *one* data point. Very fast updates, but the gradient is noisy, leading to a volatile convergence path.
+    \item \textbf{Mini-batch SGD}: A compromise. Calculate $\nabla f$ using a small batch of data. Offers a balance between the stability of Batch GD and the speed of SGD.
+\end{itemize}
+
+\textbf{Adam Optimizer}: An advanced optimization algorithm popular for deep learning. It adaptively adjusts the learning rate for each parameter, combining the ideas of \textbf{Momentum} (using a moving average of the 1st moment/gradient) and \textbf{RMSprop} (using a moving average of the 2nd moment/squared gradient).
+
+\section*{Local Search}
+An iterative improvement heuristic. Start with a candidate solution and repeatedly move to a "neighboring" solution if it is better.
+\begin{itemize}
+    \item \textbf{Neighborhood}: The set of solutions accessible from the current solution by a small change.
+    \item \textbf{Example: TSP Neighborhoods}:
+    \begin{itemize}
+        \item \textbf{2-opt}: Remove two edges from the tour, and reconnect the four resulting endpoints in the only other possible way (which "uncrosses" the paths).
+        \item \textbf{3-opt}: Remove three edges, reconnect in a way that improves the tour.
+    \end{itemize}
+\end{itemize}
+
+\section*{Particle Swarm Optimization (PSO)}
+A population-based stochastic optimization algorithm inspired by social behavior (e.g., bird flocking). Used for black-box optimization.
+\begin{itemize}
+    \item A "swarm" of particles (candidate solutions) "fly" through the search space.
+    \item Each particle $i$ has a position $\xx_i$ (its solution) and a velocity $\vv_i$.
+    \item Each particle remembers its \textbf{personal best} position found so far: $\textit{pbest}_i$.
+    \item The swarm tracks the \textbf{global best} position found by *any* particle: $\textit{gbest}$.
+\end{itemize}
+
+\section*{Core Update Equations}
+\begin{align*}
+\vv_i(t+1) = & \underbrace{\omega \vv_i(t)}_{\text{Inertia}} + \underbrace{c_1 r_1 (pbest_i - \xx_i(t))}_{\text{Cognitive/Personal}} \\
+& + \underbrace{c_2 r_2 (gbest - \xx_i(t))}_{\text{Social}} \\
+\xx_i(t+1) = & \xx_i(t) + \vv_i(t+1)
+\end{align*}
+\begin{itemize}
+    \item $\omega$: \textbf{Inertia weight}. Balances exploration (high $\omega$) and exploitation (low $\omega$).
+    \item $c_1, c_2$: \textbf{Acceleration coefficients}. Control the "pull" towards the personal best ($c_1$, cognitive) and global best ($c_2$, social).
+    \item $r_1, r_2$: Random numbers in $[0,1]$ to add stochasticity.
+\end{itemize}
+
+\section*{Topologies}
+Defines how information (the $\textit{gbest}$) is shared among particles.
+\begin{itemize}
+    \item \textbf{gbest (Global Best)}: All particles are connected. The $\textit{gbest}$ is the best of the entire swarm. Converges very fast, but can get stuck in local optima.
+    \item \textbf{lbest (Local Best)}: Particles are in a smaller neighborhood (e.g., a ring). The $\textit{gbest}$ in the equation is replaced with the $\textit{lbest}$ (best in the neighborhood). Slower convergence, but more robust to local optima.
+\end{itemize}
+
+\section*{Multi-Robot Task Allocation (MRTA)}
+The problem of assigning a set of tasks $T$ to a set of robots $R$ to optimize a collective objective (e.g., minimize time, maximize utility).
+
+\section*{MRTA Taxonomy}
+Problems are classified by:
+\begin{itemize}
+    \item \textbf{ST/MT}: \textbf{S}ingle-\textbf{T}ask / \textbf{M}ulti-\textbf{T}ask robots (robots can handle one vs. many tasks at a time).
+    \item \textbf{SR/MR}: \textbf{S}ingle-\textbf{R}obot / \textbf{M}ulti-\textbf{R}obot tasks (tasks require one vs. a team of robots).
+    \item \textbf{IA/TA}: \textbf{I}nstantaneous \textbf{A}ssignment / \textbf{T}ime-\textbf{E}xtended \textbf{A}ssignment (tasks are just assigned vs. tasks involve durations and travel, requiring scheduling/routing).
+\end{itemize}
+
+\section*{Mapping MRTA to Optimization Models}
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{MRTA Type} & \textbf{Optimization Model} \\
+\midrule
+\textbf{ST-SR-IA} (One robot per task, one task per robot) & \textbf{LAP} (Linear Assignment Problem, e.g., Hungarian Alg. $O(n^3)$) \\
+\textbf{MT-SR-IA} (Robots can take multiple tasks) & \textbf{GAP} (Generalized Assignment Problem, NP-Hard) \\
+\textbf{ST-SR-TA} (One robot per task, includes routing) & \textbf{mTSP} (Multiple Traveling Salesman Problem, NP-Hard) \\
+\textbf{MT-SR-TA} (Robots take multiple tasks, includes routing) & \textbf{VRP} (Vehicle Routing Problem, NP-Hard) \\
+\bottomrule
+\end{tabular}
+
+\section*{Set-Based Formulations (for MR tasks)}
+Used for coalition formation, where tasks require multiple robots (MR).
+\begin{itemize}
+    \item \textbf{Set Covering (MT-MR-IA)}: Find the minimum cost set of coalitions (subsets of robots) such that *every task is covered at least once*. Models MT-MR-IA, as robots can be in multiple coalitions.
+    \[ \min \sum c_j x_j \quad \text{s.t.} \quad \sum a_{ij} x_j \ge 1 \]
+    \item \textbf{Set Packing (ST-MR-IA)}: Find the maximum profit set of coalitions such that *each task is covered at most once*. Models ST-MR-IA, where task allocation must be exclusive.
+    \[ \max \sum p_j x_j \quad \text{s.t.} \quad \sum a_{ij} x_j \le 1 \]
+    \item \textbf{Set Partitioning}: Find the coalitions such that *every task is covered exactly once*. This is a very common base for routing problems.
+\end{itemize}
+
+\end{document}
