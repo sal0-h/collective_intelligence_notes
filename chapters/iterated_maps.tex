@@ -89,10 +89,10 @@ population, $r \in [0, 4]$ is growth rate
     \item $r=3$: The fixed point becomes unstable.
     \item $3<r<3.449\dots$: The system no longer settles to one point. It settles into a stable period-2 cycle, oscillating between two values. This is a bifurcation.
     \item $r>3.449\dots$: The 2-cycle becomes unstable and splits into a stable period-4 cycle. This continues, creating an 8-cycle, 16-cycle, etc., in a period-doubling cascade.
-    \item $r>r^{\inf} \approx 3.5699\dots$: The cascade finishes, and the system enters the chaotic regime. The orbit becomes aperiodic, never settling down and seemingly random.
+    \item $r>r^{\infty} \approx 3.5699\dots$: The cascade finishes, and the system enters the chaotic regime. The orbit becomes aperiodic, never settling down and seemingly random.
 \end{itemize}
 
-This behavior can be summarized in an orbit diagram .
+This behavior can be summarized in an \textbf{orbit diagram}.
 \begin{itemize}
     \item The x-axis is the parameter r.
     \item The y-axis plots the long-term attractor points for that r.
@@ -103,7 +103,7 @@ of a system with a smooth variation of a parameter
     
 A bunch of math deriving Lyapunov Exponents, but here is the final result:
 
-\[\lambda = \lim_{n \to \inf} \frac{1}{n} \sum_{k=0}^{n-1} \ln|f'(x_k)|\]
+\[\lambda = \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \ln|f'(x_k)|\]
 
 The approximation for $\lambda$ can be constructed numerically, by iterating the map!
 \begin{itemize}

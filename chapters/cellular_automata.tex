@@ -1,0 +1,115 @@
+\chapter*{Cellular Automata (CA)}
+
+\section*{CA properties}
+
+A \textbf{Cellular Automaton} is a multi-dimensional discrete-time dynamical 
+system that is defined by 
+the principle of locality. properties: 
+
+\begin{description}
+    \item[Systems's state is $n$-dimensional] $\xx(t) = (x_1(t), \dots, x_n(t))$
+    \item[Discrete time]: updated at discrete time steps 
+    \item[State components arranged according to a given topology] 
+    \item[Neighborhood defined based on topology]: $N(x_i) = 
+    {x_j : x_j \text{ is a neighbor of }x_i}$
+
+    Neighborhood is the range for a cell to be influenced by other cells
+
+    1D Example: $N(x_i)={x_{i-1},x_i,x_{i+1}}$
+
+    2D Examples:
+    \begin{itemize}
+        \item Von Neumann: The cell and its 4 neighbors (up, down, left, right).
+        \item Moore: The cell and its 8 surrounding neighbors (a 3x3 box).
+    \end{itemize}
+
+    \item[Locality of updates]: Each state component $x_i$ evolves according to a rule 
+    that depends only on its own state and those of its neighbors in $N(x_i)$.
+
+    Local-state transition function, $F_i: S(N(x_i)) \to S_i$ where $S_i$
+    s the set of values that state component $x_i$ can take, 
+    and $S$ is the state values from the cells in the neighborhood set.
+
+    \item[Initial Conditions]: state at $t=0$
+\end{description}
+
+\section*{Lattices and Boundaries:}
+\textbf{Infinite/adaptive lattice}: The grid grows as the pattern propagates
+
+\textbf{Finite lattice}
+\begin{itemize}
+    \item Hard boundary: fixed, edge cells have a fixed state
+    \item Hard boundary: reflective, leftmost (rightmost) cell only diffuse right (left)
+    \item Soft boundary: periodic boundary conditions, edges wrap around
+\end{itemize}
+
+\section*{Updating Schedules:}
+\begin{itemize}
+    \item Synchronous Updating: At time t, all cells read the states of 
+    their neighbors. Then, they all compute their next state. Finally, all cells update their state simultaneously to begin step $t+1$.
+    \item Asynchronous Updating: Cells update one at a time or in random groups. The order matters. A cell updating later in the step will see the already updated states of its neighbors who updated earlier.
+\end{itemize}
+
+\section*{Some Math}
+We assume they are homogeneous (same lattice, same N, and same rule F for all cells)
+and use synchronous updating.
+
+\textbf{Combinatorics}
+Let: 
+\begin{itemize}
+    \item $k = |S|$ is the number of states per cell 
+    \item $M$ is the number of cells 
+    \item $r$ is the range ($floor(|N(a)|/2)$)
+\end{itemize}
+
+Then: 
+\begin{itemize}
+    \item Number of possible state configs: $k^{M}$
+    \item Number of possible neighborhood configurations: $k^{|N|}$
+    \item Number of possible evolution functions (rules): $k^{\left(k^{|N|}\right)}$
+    Why? This is the number of possible functions mapping from the set of neighborhood configurations (domain size $k^{|N|}$) to the set of possible next states (codomain size $k$). For each of the $k^{|N|}$ possible inputs, there are $k$ possible outputs.
+\end{itemize}
+
+\section*{Wolfram Code}
+
+For Wolfram's 1D CA: $S = \{0, 1\}$ (so $k=2$) and the neighborhood is $r=1$ (i.e., $N(x_i) = \{x_{i-1}, x_i, x_{i+1}\}$, so $|N|=3$).
+
+Using our formula, the number of rules = $k^{\left(k^{|N|}\right)} = 2^{\left(2^3\right)} = 2^8 = 256$.
+
+
+\section*{Four classes of Behavior and Chaos}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|p{4cm}|p{4cm}|c|}
+\hline
+\textbf{Class} & \textbf{Behavior} & \textbf{Information Dynamics} & \textbf{Lyapunov Exponent} \\
+\hline
+1 & Evolves to a simple, stable, homogeneous state (all 0s or all 1s). & Small changes die; information is lost. & $\lambda \le 0$ \\
+\hline
+2 & Evolves to simple periodic structures (stripes, oscillators). & Small changes may persist locally but do not spread. & $\lambda = 0$ \\
+\hline
+3 & Evolves to chaotic, aperiodic patterns (e.g., Rule 30). & Small changes spread out and affect distant regions. & $\lambda > 0$ \\
+\hline
+4 & Creates complex, localized, moving structures. (e.g., Rule 110 is \textbf{Turing complete}) & Small changes may or may not spread; irregular but structured dynamics. & $\lambda > 0$ (tends to 0) \\
+\hline
+\end{tabular}
+\end{table}
+
+\section*{Game of Life}
+
+\begin{itemize}
+    \item 2D Lattice of identical cells 
+    \item Moore neighborhood
+    \item 2 states: dead or alive
+    \item The 4 Rules:
+    \begin{description}
+        \item[Loneliness] A live cell with $<2$ live neighbors dies.
+        \item[Overcrowding] A live cell with $>3$ live neighbors dies.
+        \item[Survival] A live cell with 2 or 3 live neighbors lives on.
+        \item[Reproduction] A dead cell with exactly 3 live neighbors becomes alive.
+    \end{description}
+    \item Garden of Eden: A pattern that can only exist as initial pattern. In other
+words, no parent could possibly produce the pattern.
+\end{itemize}
