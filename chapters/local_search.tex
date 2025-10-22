@@ -1,0 +1,192 @@
+\chapter*{Local Search}
+
+Local Search is a fundamental optimization framework
+\section*{Core Concept}
+
+They are iterative algorithms that each step consider a single current state, and try to 
+improve it by moving to one of its neighbor state that has a better evaluation 
+score
+
+\begin{itemize}
+    \item Search for an improvement is done in local neighborhood only 
+    \item Hill climbing, gradient are specific instances of LS
+\end{itemize}
+
+Local Search  methods work with complete problem
+states/solutions, $s$, i.e., all necessary variables are assigned
+
+\section*{Neighborhoods in discrete domains}
+
+\begin{itemize}
+    \item 1-flip N for 0-1 vectors
+    \item 2-swap N for permutation vectors 
+    \item k-exchange N, $N(s)$ of a state $s$ is the set of states $s'$ that differ
+    from $s$ up to $k$ solution components/values
+\end{itemize}
+
+A small neighborhood is fast to search at each step, but the search is less powerful.
+
+A large neighborhood is slower to search but can find better solutions.
+
+\section*{Generic algorithm}
+
+\begin{tcolorbox}[colback=white, colframe=black!25, title={\textbf{Procedure:} LocalSearch\_SearchByIterativeSolutionModification($\pi$)}]
+
+\textbf{Inputs:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $\pi$ : optimization problem instance (class II)
+    \item $\Sigma$ : set of feasible solutions for $\pi$
+    \item $\mathcal{N}$ : neighborhood structure (may depend on $(s, t, m)$)
+\end{itemize}
+
+\textbf{Functions:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $\text{eval}(s)$ : evaluation function
+    \item $\text{terminate}(s, \pi, \mathcal{N}, t, m)$ : stopping condition
+    \item $\text{get\_next}(\mathcal{N}, \pi, m, \text{eval})$ : proposes a neighbor and updates memory
+    \item $\text{accept}(s', s, t, m)$ : acceptance criterion
+    \item $\text{update\_best}(\pi, s, t, m)$ : tracks best solution found
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Initialization:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $t \gets 0$
+    \item $m_t \gets \emptyset$ \hfill (\textit{memory, e.g. tabu list, stats, caches})
+    \item $s_t \gets \text{InitialFeasibleSolution}(\pi, \Sigma)$
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Main Loop:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item \textbf{while} not $\text{terminate}(s_t, \pi, \mathcal{N}_t, t, m_t)$:
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item $(s', m_t) \gets \text{get\_next}(\mathcal{N}_t(s_t, \pi), \pi, m_t, \text{eval})$
+        \item \textbf{if} $\text{accept}(s', s_t, t, m_t)$:
+        \begin{itemize}[noitemsep, leftmargin=2em]
+            \item $s_{t+1} \gets s'$
+            \item $m_t \gets \text{update\_best}(\pi, s_{t+1}, t, m_t)$
+        \end{itemize}
+        \item $t \gets t + 1$
+    \end{itemize}
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Return:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item \textbf{if} $\text{AtLeastOneFeasibleSolutionGenerated}(m_t, \Sigma)$:
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item \textbf{return} $\text{BestSolutionFound}(m_t)$
+    \end{itemize}
+    \item \textbf{else:}
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item \textbf{return} ``No feasible solution found!''
+    \end{itemize}
+\end{itemize}
+
+\end{tcolorbox}
+
+\section*{Local Search for TSP: Neighborhood Structures}
+
+Local Search for the TSP relies on defining a neighborhood
+
+\subsection*{2-opt}
+\begin{enumerate}
+    \item Select two non-adjacent edges, e.g., $(A,B)$ and $(C,D)$.
+    \item Remove them, creating two separate paths.
+    \item Reconnect the paths as $(A,C)$ and $(B,D)$.
+\end{enumerate}
+\textbf{Effect:} Reverses the segment between the two edges, effectively ``uncrossing'' the tour.  
+
+\textbf{Complexity:} $O(N^2)$ possible edge pairs.
+
+\subsection*{3-opt}
+\begin{enumerate}
+    \item Delete three edges, splitting the tour into three paths.
+    \item Reconnect them in one of $2^3 = 8$ possible configurations (including the original).
+\end{enumerate}
+\textbf{Effect:} Allows both reversed and non-reversed segments, enabling solutions unreachable by 2-opt.  
+
+\textbf{Complexity:} $O(N^3)$ possible triples of edges.  
+
+\textbf{Note:} Necessary for Asymmetric TSP (ATSP) where $d(A,B) \neq d(B,A)$.
+
+\subsection*{4-opt (Double Bridge)}
+\textbf{Features:}
+\begin{itemize}
+    \item Does not revert tour segments (useful for ATSP).
+    \item Achieves $O(N^2)$ complexity with clever implementation.
+    \item Commonly combined with 2-opt for improved performance.
+\end{itemize}
+
+\section*{Solution Modification vs Construction}
+
+\begin{itemize}
+    \item Solution Modification (Local Search):
+    You start with a complete solution (e.g., a full TSP tour) and make local 
+    modifications  to iteratively improve it.
+    \item Solution Construction:  You start with an empty solution and 
+    incrementally build it, one piece at a time, until it is complete.
+\end{itemize}
+
+\begin{tcolorbox}[colback=white, colframe=black!25, title={\textbf{Procedure:} Construction\_Metaheuristic($\pi$)}]
+
+\textbf{Inputs:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $\pi$ : optimization problem instance (class II)
+    \item $\Sigma$ : set of feasible (complete) solutions for $\pi$
+    \item $I$ : index set of decision variables (e.g., $I = \{0, 1, 2, \dots\}$)
+    \item $\mathcal{X}$ : domain sets of decision variables (e.g., $\mathcal{X} = [0,1]$)
+    \item $\text{eval}(s)$ : evaluation function of assignments
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Construction Operators (problem-specific):}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $\text{select\_variable\_index}(I \mid s_t)$
+    \item $\text{assign\_variable\_value}(\mathcal{X} \mid s_t)$
+    \item $\text{include\_in\_solution}(s_t, i, x_i)$
+    \item $\text{update\_cost}(J_t; x_i \mid s_t)$
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Termination Policy:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $\text{termination\_criterion}(s_t, t)$
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Initialization:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item $t \gets 0$
+    \item $s_t \gets \emptyset$ \hfill (\textit{partial solution})
+    \item $J_t \gets 0$ \hfill (\textit{cost accumulator})
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Main Loop:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item \textbf{while} $(s_t \notin \Sigma)$ and not $\text{termination\_criterion}(s_t, t)$:
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item $i_t \gets \text{select\_variable\_index}(I \mid s_t)$
+        \item $x_{i_t} \gets \text{assign\_variable\_value}(\mathcal{X} \mid s_t)$
+        \item $s_{t+1} \gets \text{include\_in\_solution}(s_t, i_t, x_{i_t})$
+        \item $J_{t+1} \gets \text{update\_cost}(J_t; x_{i_t} \mid s_t)$
+        \item $t \gets t + 1$
+    \end{itemize}
+\end{itemize}
+
+\vspace{0.7em}
+\textbf{Return:}
+\begin{itemize}[noitemsep, leftmargin=2em]
+    \item \textbf{if} $(s_t \in \Sigma)$:
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item \textbf{return} $(s_t, J_t)$
+    \end{itemize}
+    \item \textbf{else:}
+    \begin{itemize}[noitemsep, leftmargin=2em]
+        \item \textbf{return} ``No feasible solution found!''
+    \end{itemize}
+\end{itemize}
+
+\end{tcolorbox}
