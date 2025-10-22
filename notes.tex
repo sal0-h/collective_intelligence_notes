@@ -1,4 +1,4 @@
-\documentclass{report}
+\documentclass[openany]{report}
 \usepackage[parfill]{parskip} % Replaces \setlength{\parindent}{0pt}
 \usepackage{hyperref} % For clickable links and bookmarks
 \usepackage{bookmark}
@@ -9,6 +9,20 @@
 \usepackage{amsmath} % For math environments
 \usepackage{tcolorbox}
 \usepackage{array}
+
+\makeatletter
+\def\chapter{\@ifstar\@schapter\@chapter}
+\def\@chapter#1{%
+  \refstepcounter{chapter}%
+  \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter}#1}%
+  \chaptermark{#1}%
+  {\par\vspace{2em}\centering\LARGE\bfseries Chapter \thechapter\\#1\par\vspace{1em}}%
+}
+\def\@schapter#1{%
+  {\par\vspace{1em}\centering\LARGE\bfseries #1\par\vspace{1em}}%
+}
+\makeatother
+
 \input{preamble}
 \title{15-382 Collective Intelligence}
 \date{First Edition}
@@ -29,10 +43,12 @@ Good luck,
 
 SH
 
-\include{chapters/dynamical_systems}
-\include{chapters/iterated_maps}
-\include{chapters/cellular_automata}
-\include{chapters/networks}
+\input{chapters/dynamical_systems}
+\input{chapters/iterated_maps}
+\input{chapters/cellular_automata}
+\input{chapters/networks}
+\input{chapters/swarm_intelligence}
+\input{chapters/pso}
 \include{chapters/robot}
 
 \end{document}
