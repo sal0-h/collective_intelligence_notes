@@ -1,0 +1,151 @@
+\section*{Optimization}
+
+Comparing PSO with single optimizing agents. We saw for PSO 
+if left alone, each agent would behave like a memory-based random searcher,
+biased toward its own best-so-far. 
+
+A conservative blind explorer, with no reliable signal to use for improving.
+
+\section*{Hill-Climber Optimizing Agent}
+
+Smarter Optimizing Agent. Like climbing Everest in thick fog with amnesia.
+
+\begin{tightitemize}
+    \item Start at a random point
+    \item Sample the neighborhood of the current point
+    \item Always moves in direction of local imporovement
+    \item Repeat until no neighbor is better (it has reached a peak).
+\end{tightitemize}
+
+\textbf{Variants to improve it:}
+\begin{tightitemize}
+    \item Stochastic hill-climber: introduces randomness in the selection of neighbor points
+    \item Random Restarts: escape mechanism for local optima
+\end{tightitemize}
+
+Hill-climbing is powerful for Constraint Satisfaction Problems (CSPs), like n-Queens.
+It can solve large instances of $n$-queens ($n$ = 106) in a few seconds
+
+\section*{Gradient-Based Agents}
+
+\textbf{The Gradient ($\nabla f(\mathbf{x})$)}\\
+The gradient is the vector of partial derivatives 
+$
+\nabla f(\mathbf{x}) = \left(\frac{\partial f}{\partial x_1}, \dots, \frac{\partial f}{\partial x_n}\right),
+$ 
+and it points in the direction of the steepest increase of the function $f$ at $\mathbf{x}$.
+
+\vspace{0.5em}
+\textbf{Gradient Descent Algorithm}\\
+To minimize a function, an agent iteratively moves in the direction of the negative gradient:
+
+\begin{tightitemize}
+    \item Start at an initial point $\mathbf{x}_0$.
+    \item Compute the descent direction: $\mathbf{d}_k = -\nabla f(\mathbf{x}_k)$.
+    \item Choose a step size $\alpha_k$ (how far to move).
+    \item Update the position: $\mathbf{x}_{k+1} = \mathbf{x}_k + \alpha_k \mathbf{d}_k$.
+    \item Repeat until the gradient is approximately zero ($\nabla f(\mathbf{x}) \approx 0$), indicating a minimum.
+\end{tightitemize}
+
+For convex functions we are guaranteed to get to the local and global minimum 
+in a finite (possibly small) number of iterations
+
+For non-convex functions, the final local optimum depends on where we start from
+
+\section*{Applications for ML}
+
+Optimization function represents the classification Error of a ML model during training,
+i.e., the total Loss on on training set 
+
+$
+\sum_{i=1}^{m}l(\hat{y}^i(\ww^i, \xx^i), y^i)
+$
+
+\textbf{Gradient Descent Procedure for OLSR}
+
+For a linear model with quadratic loss:
+
+$
+E(\mathbf{w}; X, Y) = \frac{1}{2} \sum_{i=1}^N (\mathbf{w}^\top x_i - y_i)^2
+$
+
+The gradient is:
+
+$
+\nabla E(\mathbf{w}) = \sum_{i=1}^N (\mathbf{w}^\top x_i - y_i)x_i
+$
+
+Gradient descent update:
+
+$
+\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \alpha \sum_{i=1}^N (\mathbf{w}^{(t)\top} x_i - y_i)x_i
+$
+
+\begin{enumerate}[label=\arabic*.]
+    \item Initialize $\mathbf{w}^{(0)}$ (e.g., random or zero vector), $t \gets 0$.
+    \item Repeat until convergence or maximum iterations $N$:
+    \begin{tightitemize}
+        \item Compute gradient: $\nabla E$
+        \item Choose step size $\alpha$ (fixed or adaptive)
+        \item Update parameters: $\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \alpha \nabla E$
+        \item If $\|\mathbf{w}^{(t+1)} - \mathbf{w}^{(t)}\| < \text{tolerance}$, break
+    \end{tightitemize}
+    \item Return $\mathbf{w}^{(t+1)}$ as the solution.
+\end{enumerate}
+
+\section*{Batch vs Stochastic GD}
+
+\begin{tightitemize}
+    \item Batch Mode (Regular): Gradient at each step is computed over the entire function,
+    This is accurate but impossibly slow if $m = 1$ billion.
+    \item Stochastic Gradient Descent: Gradient at each step is
+    computed over one single component / data point selected out of the $m$ ones.
+    Takes many more steps (but each step is computationally light). The steps are very fast but "erratic".
+    \item Mini-batch (stochastic) Gradient Descent: Gradient at each step is computed
+    over one subset of data points. This is good balance of speed and stability.
+\end{tightitemize}
+
+\section*{Momentum and Adam}
+
+SGD can be slow or get stuck
+
+\textbf{Momentum (MGD)}\\
+Adds an inertia term by combining the current gradient with the previous update, allowing the agent to roll through small bumps and accelerate along gentle slopes:
+$
+\mathbf{v}_t = \gamma \mathbf{v}_{t-1} + \alpha \nabla f(\mathbf{w}_t), \quad
+\mathbf{w}_{t+1} = \mathbf{w}_t - \mathbf{v}_t
+$
+
+\textbf{Adam (Adaptive Moment Estimation)}\\
+A popular optimizer combining two ideas:
+\begin{tightitemize}
+    \item \textbf{Momentum ($\mathbf{m}_t$)}: exponentially weighted average of past gradients (1st moment) to determine direction.
+    \item \textbf{Adaptive scaling ($\mathbf{v}_t$)}: exponentially weighted average of past squared gradients (2nd moment) to adapt learning rates per parameter.
+\end{tightitemize}
+Adam updates each weight using $\mathbf{m}_t$ for direction and $\mathbf{v}_t$ for adaptive step sizes.
+
+\section*{Comparing ADAM against PSO}
+
+One core difference: ADAM is a Local Optimizer, PSO is a Global optimizer!
+
+In general Adam worse, unless the shape is nice (Adam did well on ellispoid, got smoked in 
+griewank, rastrigin, schwefel)
+
+\section*{Hybrid?}
+
+If PSO is a great "explorer" and Adam is a great "exploiter," the obvious solution is to combine them.
+    
+The Strategy:
+\begin{tightitemize}
+    \item PSO Phase: Let the PSO swarm run for several iterations. 
+    The particles spread out and find the most promising valleys.
+    \item Local Search Phase: 
+    Take the best particles and run a local optimizer starting from their positions.
+    \item Cooperation: The local optimizer  will find the exact bottom of that valley. 
+    This new accurate position is then fed back to the swarm as the new gbest.
+\end{tightitemize}
+        
+
+        
+
+        

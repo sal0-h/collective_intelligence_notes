@@ -1,0 +1,104 @@
+\section*{Iterated Maps}
+
+\textbf{Discrete-time dynamical systems} have a state which is only 
+defined at integer steps. 
+
+The state is:
+$\xx(n) = (x_1(n), \dots, x_k(n))$
+where $k$ is the dimension of the system and $n$ is an integer step parameter
+
+and the rule is: $\xx_n = \mathbf{f}(\xx_{n-1}, \dots, \xx_{n-m})$
+
+Next state is obtained by directly apply the map $\mathbf{f}$
+
+\section*{1D Iterated Maps and Cobweb Plots}
+
+We focus on the simplest case: a 1D map $x_n = f(x_{n-1})$
+
+\begin{itemize}
+    \item \textbf{Orbit:} sequence of points generated starting at $x_0$
+    and keep applying the map 
+    \item \textbf{Fixed point:} Point that maps to itself: $f(x^*) = x^*$
+\end{itemize}
+
+\textbf{Sawtooth diagram:} Plotting the $(x, f(x))$ diagram. No time shown, 
+all it tells you is if the system is at $x$ now, the next state will be at $f(x)$
+
+\textbf{Cobweb Plot construction algorithm:}
+
+\begin{enumerate}
+    \item Draw $y=f(x)$ and $y=x$
+    \item Start at initial point $x_0$ on horizontal axis 
+    \item Move \textbf{vertically} to $y = f(x)$ (this is point $x_0, x_1$)
+    \item Move \textbf{horizontally} to $y = x$ (this is point $x_1, x_1$)
+    \item Move \textbf{vertically} to $y = f(x)$ again (this is point $x_1, x_2$)
+    \item Keep going lil bro
+\end{enumerate}
+
+The intersections of $y = f(x)$ and $y = x$ are fixed points. We can analyze 
+stability of a fixed point by looking at the plot.
+
+\section*{Stability of fixed points}
+
+A linear approximation shows that $\epsilon_{n+1} = f'(x^*)\epsilon_n$. Let $\lambda = f'(x^*)$
+
+Solving: $\epsilon_n = \lambda^n \epsilon_0$. If you know some basics you can 
+infer stability from this alone but I will write a table.
+
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lll}
+\toprule
+\textbf{$\lambda = f'(x^*)$} & \textbf{Stability Type} & \textbf{Behavior Near $x^*$} \\
+\midrule
+\multicolumn{3}{l}{\textbf{Stable (Attracting)}} \\
+\quad $0 < \lambda < 1$ & Monotonic & Converges from one side \\
+\quad $-1 < \lambda < 0$ & Oscillatory & Zig-zag convergence (alternating sides) \\
+\quad $\lambda = 0$ & Superstable & Very fast convergence \\
+\addlinespace
+\multicolumn{3}{l}{\textbf{Unstable (Repelling)}} \\
+\quad $\lambda > 1$ & Monotonic & Diverges from one side \\
+\quad $\lambda < -1$ & Oscillatory & Alternating divergence \\
+\addlinespace
+\multicolumn{3}{l}{\textbf{Marginal}} \\
+\quad $|\lambda| = 1$ & Neutral & Linearization inconclusive \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{Logistic map and chaos}
+
+\textbf{Logistic Map:} $x_{n+1} = r x_n (1 - x_n)$ where $x_n \in [0, 1]$ is 
+population, $r \in [0, 4]$ is growth rate
+
+\begin{itemize}
+    \item $1<r<3$: The population converges to a single, stable fixed point $x^*=1-1/r$.
+    \item $r=3$: The fixed point becomes unstable.
+    \item $3<r<3.449\dots$: The system no longer settles to one point. It settles into a stable period-2 cycle, oscillating between two values. This is a bifurcation.
+    \item $r>3.449\dots$: The 2-cycle becomes unstable and splits into a stable period-4 cycle. This continues, creating an 8-cycle, 16-cycle, etc., in a period-doubling cascade.
+    \item $r>r^{\infty} \approx 3.5699\dots$: The cascade finishes, and the system enters the chaotic regime. The orbit becomes aperiodic, never settling down and seemingly random.
+\end{itemize}
+
+This behavior can be summarized in an \textbf{orbit diagram}.
+\begin{itemize}
+    \item The x-axis is the parameter r.
+    \item The y-axis plots the long-term attractor points for that r.
+\end{itemize}    
+
+A \textbf{bifurcation} is a qualitative change in the long-term behavior
+of a system with a smooth variation of a parameter
+    
+A bunch of math deriving Lyapunov Exponents, but here is the final result:
+
+\[\lambda = \lim_{n \to \infty} \frac{1}{n} \sum_{k=0}^{n-1} \ln|f'(x_k)|\]
+
+The approximation for $\lambda$ can be constructed numerically, by iterating the map!
+\begin{itemize}
+    \item $\lambda < 0$: For stable fixed points and cycles
+    \item $\lambda > 0$: For chaotic attractors
+    \item $\lambda = 0$: This is the marginal case, which occurs at bifurcation points.
+    \item $\lambda$ is the same for all points in the basin of attraction of an attractor
+\end{itemize} 
+    
+

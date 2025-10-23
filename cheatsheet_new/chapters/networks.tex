@@ -1,0 +1,293 @@
+\section*{Networks}
+
+For Undirected graphs:
+\begin{tightitemize}
+    \item Node degree $k_i$: number of edges adjacent to 
+    node $i$
+    \item Handshake theorem: let $L$ be the number of edges.
+    Then $L = \frac{1}{2}\sum_{i=1}^{N}k_i$
+    \item Average degree: $\langle k \rangle = \frac{2L}{N}$
+\end{tightitemize}
+
+For Directed Graphs:
+\begin{tightitemize}
+    \item In-degree: number of edges going into node 
+    \item Out-degree: number of edges going out of the node 
+    \item Total degree $k_i = k_i^\text{in} + k_i^\text{out}$
+    \item Average degree (either in or out): $\frac{L}{N}$
+\end{tightitemize}
+
+\textbf{Degree Distribution:} $p_k = \frac{N_k}{N}$ where $N_k$ is number of 
+nodes with degree $k$
+
+\textbf{Complete graph:} every possible edge is there. $L = \frac{N(N-1)}{2}$
+
+\begin{tightitemize}
+    \item \textbf{Walk:} A sequence of vertices (and corresponding edges) such that consecutive vertices are adjacent. 
+    Vertices and edges may repeat. For example, $(1 \to 2 \to 1)$ is a valid walk.
+
+    \item \textbf{Path:} A walk in which all vertices (and therefore all edges) are distinct. 
+    For example, $(1 \to 2 \to 3)$ is a path, but $(1 \to 2 \to 1)$ is not.
+
+    \item \textbf{Length:} The number of edges in a walk or path, or the sum of their weights if the graph is weighted.
+
+    \item \textbf{Distance:} The length of the shortest path between two vertices. 
+    In unweighted graphs, this equals the minimal number of hops; in weighted graphs, the minimal total weight.
+
+    \item \textbf{Shortest Path:} A path whose length equals the distance between its endpoints.
+
+    \item \textbf{Diameter:} The maximum distance between any two vertices in the graph; equivalently, 
+    the length of the longest shortest path.
+\end{tightitemize}
+
+\textbf{Connected graph} is an undirected graph where there exists a path between 
+every pair of nodes
+
+For directed graphs there is 
+\begin{tightitemize}
+    \item Strongly connected if for every pair there is a path 
+    \item Weakly connected if every pair there is a path \textbf{when you
+    ignore edge directions}
+\end{tightitemize}
+
+If the largest component in a graph has a large fraction of the nodes,
+we call it the giant component
+
+\section*{Two representations for graphs}
+
+\begin{tightitemize}
+    \item Adjacency list: a mapping from each node to it's neighborhood
+    \item Adjacency matrix: $N \times N$ matrix $A$ such that $A_{ij} = 1$ if link 
+    $(i, j)$ exists, and $0$ otherwise. 
+\end{tightitemize}
+
+\begin{tightitemize}
+    \item For undirected graphs they are symmetric (the A)
+    \item Number of walks between nodes $i, j$ can be calculated as follows:
+        $(A^l)_{ij}$ gives $\#$walks of length $l$.
+\end{tightitemize}
+
+\textbf{Average path length:}
+$
+h = \frac{1}{2E_{\text{max}} \sum_{i, j \ne i}h_{ij}}
+$
+where $h_ij$ is the distance from $i$ to $j$ and $E_{\text{max}} = n(n-1)/2$
+
+\textbf{Clustering Coefficient}
+
+Let $L_i$  be the number of links between neighbors of $i$. 
+Then the clustering coefficient of node $i$ is 
+$
+c_i = \frac{2L_i}{k_i(k_i - 1)}
+$
+
+\textbf{Global clustering coefficient:} $C = \frac{1}{N}\sum_{i=1}^{N}c_i$
+
+Real networks are: 
+\begin{tightitemize}
+    \item Scale-free (from $p_k$): they have hubs
+    \item Small world (from $h$): average distance is very small 
+    \item Locally dense (from $C$): clustering is very high
+\end{tightitemize}
+
+We will try to have a process that can create a network with these properties 
+
+\section*{Model 1: Erdos-Renyi (ER)}
+
+
+\textbf{Generative process:} each of the $\binom{N}{2}$ possible edges, an edge is created with 
+probability $p$
+\textbf{Degree Distribution:} 
+$
+p_k = \binom{N-1}{k}p^k (1-p)^{N-1-k}
+$
+
+Mean degree is $\bar{k} = p(N-1)$, Variance is $(N-1)p(1-p)$
+
+For large, sparse networks that simplifies to Poisson distribution:
+$
+p_k = e^{-\bar{k}} \frac{\bar{k}^k}{k!}
+$
+
+\textbf{Clustering Coefficient:} $E[C] = p = \frac{\bar{k}}{N-1}$, i.e. small
+
+\textbf{Average path length} grows as: $O(\log N)$
+
+\textbf{Verdict:}
+\begin{tightitemize}
+    \item Scale-free: NO, $p_k$ is Poisson (should be power law)
+    \item Small world: YES, low $h$
+    \item Locally dense: NO, $C$ is very low (should be high)
+\end{tightitemize}
+
+\section*{Model 2: Watts-Strogatz (WS) (Small World)}
+
+This model was made to fix the clustering problem. 
+
+\textbf{Generative process:}
+\begin{tightitemize}
+    \item Start with a regular ring lattice, where each node is connected to 
+    $m$ nearest neighbors. Graph starts with high $C$ and $h$
+    \item Go through each edge, and with prob $p$ rewire one end of the edge 
+    to a randomly chosen node. 
+\end{tightitemize}
+
+What happens for different p?
+\begin{tightitemize}
+    \item $p = 0$: Just a regular lattice, high $C$ and $h$
+    \item $p = 1$: Just a random graph, low $C$ and $h$
+    \item $p = 0.01$: A few rewired links act as shortcuts, dropping 
+    $h$ dramatically (to around $log N$), while keeping a high $C$
+\end{tightitemize}
+
+\textbf{Verdict:}
+\begin{tightitemize}
+    \item Scale-free: NO, $p_k$ is peaked at around $m$
+    \item Small world: YES, low $h$
+    \item Locally dense: YES, $C$ is high 
+\end{tightitemize}
+
+\section*{Model 3: Barabasi-Albert (BA) Scale-Free Model}
+
+\textbf{Generative Process}
+
+\begin{tightitemize}
+    \item \textbf{Growth:} The network is not a fixed size. It starts with a small "seed" 
+    network, and at each time step, a new node is added.
+    \item \textbf{Preferential Attachment:} New node connects to $m$ existing nodes. 
+    The probability $\Pi(i)$ of it connecting to an existing node $i$ is not uniform. 
+    It is proportional to that node's current degree $k_i$:
+    $
+    \Pi(i) = \frac{k_i}{\sum_{j}k_j}
+    $
+\end{tightitemize}
+
+\textbf{Verdict:}
+\begin{tightitemize}
+    \item Scale-free: YES, naturally produces a power-law degree distribution ($p_k$ around $k^{-3}$)
+    \item Small world: YES, low $h$
+    \item Locally dense: KINDA, $C$ is a typically lower than in real networks
+\end{tightitemize}
+
+\section*{Importance of a node: Network Centrality Measures}
+
+Certain positions within the network give nodes more power or importance.
+We will explore different types
+
+\section*{Classic (Non-Recursive) Centrality Measures}
+
+\textbf{Degree Centrality}
+
+The number of other nodes $n$ is connected to. 
+
+\textbf{Meaning:} A node with high degree centrality 
+has high potential communication activity
+
+\textbf{Betweenness Centrality}
+
+Number of shortest paths connecting all pairs of other nodes that pass through $n$
+
+\textbf{Meaning:} A node with high betweenness centrality acts as a "bridge" or "gatekeeper"
+and has significant control over the flow of information.
+
+\textbf{Closeness Centrality}
+
+Measures how "close" a node is to all other nodes in the network.
+
+$
+C(n) = \frac{N}{\sum_{m}^{d(m, n)}}
+$
+where $d(m, n)$ is distance between $m$ and $n$
+
+\textbf{Meaning:} Efficiency of information spread. It answers the question,
+"How fast can I reach everyone else from this node?"
+
+\section*{Self-Consistent (Recursive) Centrality}
+
+A node's importance is determined by the importance of its neighbors. 
+This creates a recursive, self-referential definition.
+
+\textbf{Eigenvector centrality}
+
+The centrality of a node $i$ is the scaled sum of centralities of its neighbors
+
+$
+c_i = \frac{1}{\lambda} \sum_{j \in N(i)}^{c_j}
+$
+
+Some math leads it to $A \cc = \lambda \cc$ where $\cc$ is the principal 
+eigenvector of the adjacency matrix
+
+\textbf{Computing eigvenector centrality}
+
+For a network with billions of nodes, we can't just "solve" this equation. We must compute it iteratively.
+
+
+\subsubsection*{1. Power Method (Power Iteration)}
+This is the standard centralized algorithm. It uses iterative matrix multiplication to converge to the principal eigenvector.
+
+\begin{tightitemize}
+    \item \textbf{Initialize:} Choose an arbitrary nonzero vector $\mathbf{c}^{(0)}$ (e.g., all ones).
+    \item \textbf{Iterate:} Multiply by the adjacency matrix:
+    $
+    \mathbf{c}^{(t+1)} = A \mathbf{c}^{(t)}.
+    $
+    \item \textbf{Normalize:} To prevent numerical overflow, normalize at each step:
+    $
+    \mathbf{c}^{(t+1)} = \frac{A \mathbf{c}^{(t)}}{\|A \mathbf{c}^{(t)}\|}.
+    $
+    \item \textbf{Converge:} As $t \to \infty$, $\mathbf{c}^{(t)}$ converges to the principal eigenvector $\mathbf{c}_1$.  
+
+\end{tightitemize}
+
+\subsubsection*{2. Gossip Algorithms (Decentralized Power Method)}
+Gossip algorithms implement the same idea in a distributed and asynchronous way, without a central coordinator.
+
+\begin{tightitemize}
+    \item Each node $i$ maintains its own estimate $c_i^{(t)}$.
+    \item Nodes periodically \emph{gossip} (push or pull) their current $c_i$ values to their neighbors.
+    \item Each node updates asynchronously:
+    $
+    c_i^{(t+1)} = \sum_{j \in N(i)} c_j^{(t)}.
+    $
+    Over time, these local updates collectively approximate the global power iteration, converging to the same principal eigenvector.
+\end{tightitemize}
+
+\textbf{Alpha-Centrality}
+
+The idea is that the centrality is a combination of two things:
+
+\begin{tightitemize}
+    \item Recursive influence from its neighbors (scaled by $\alpha$).
+    \item An "exogenous" or baseline importance $e$.
+\end{tightitemize}
+
+The defining equation is:
+$
+\cc = \alpha A \cc + \beta \ee
+$
+
+Solving for $\cc$:
+$
+\cc = \beta (I - \alpha A)^{-1} \ee
+$
+
+Since
+$
+(I - \alpha A)^{-1} = I + \alpha A + \alpha^2 A^2 + \dots,
+$
+we can interpret each term as a contribution from paths of increasing length:
+
+\begin{tightitemize}
+    \item $\beta I \ee$ — baseline importance (paths of length 0),
+    \item $\beta \alpha A \ee$ — influence from direct neighbors (paths of length 1),
+    \item $\beta \alpha^2 A^2 \ee$ — influence from neighbors-of-neighbors (paths of length 2),
+    \item and so on for longer paths.
+\end{tightitemize}
+
+\noindent
+The parameter $\alpha$ controls the extent of influence propagation:
+\begin{tightitemize}
+    \item For small $\alpha$, only local structure matters (nearby nodes dominate).
+    \item As $\alpha$ approaches $1 / \lambda_1$ (where $\lambda_1$ is the largest eigenvalue of $A$), global structure dominates, and the measure converges to \textbf{eigenvector centrality}.
+\end{tightitemize}

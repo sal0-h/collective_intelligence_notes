@@ -1,0 +1,72 @@
+\section*{Local Search}
+
+Local Search is a fundamental optimization framework
+\section*{Core Concept}
+
+They are iterative algorithms that each step consider a single current state, and try to 
+improve it by moving to one of its neighbor state that has a better evaluation 
+score
+
+\begin{itemize}
+    \item Search for an improvement is done in local neighborhood only 
+    \item Hill climbing, gradient are specific instances of LS
+\end{itemize}
+
+Local Search  methods work with complete problem
+states/solutions, $s$, i.e., all necessary variables are assigned
+
+\section*{Neighborhoods in discrete domains}
+
+\begin{itemize}
+    \item 1-flip N for 0-1 vectors
+    \item 2-swap N for permutation vectors 
+    \item k-exchange N, $N(s)$ of a state $s$ is the set of states $s'$ that differ
+    from $s$ up to $k$ solution components/values
+\end{itemize}
+
+A small neighborhood is fast to search at each step, but the search is less powerful.
+
+A large neighborhood is slower to search but can find better solutions.
+
+\section*{Local Search for TSP: Neighborhood Structures}
+
+Local Search for the TSP relies on defining a neighborhood
+
+\subsection*{2-opt}
+\begin{tightitemize}
+    \item Select two non-adjacent edges, e.g., $(A,B)$ and $(C,D)$.
+    \item Remove them, creating two separate paths.
+    \item Reconnect the paths as $(A,C)$ and $(B,D)$.
+\end{tightitemize}
+\textbf{Effect:} Reverses the segment between the two edges, effectively ``uncrossing'' the tour.  
+
+\textbf{Complexity:} $O(N^2)$ possible edge pairs.
+
+\subsection*{3-opt}
+\begin{tightitemize}
+    \item Delete three edges, splitting the tour into three paths.
+    \item Reconnect them in one of $2^3 = 8$ possible configurations (including the original).
+\end{tightitemize}
+\textbf{Effect:} Allows both reversed and non-reversed segments, enabling solutions unreachable by 2-opt.  
+
+\textbf{Complexity:} $O(N^3)$ possible triples of edges.  
+
+\textbf{Note:} Necessary for Asymmetric TSP (ATSP) where $d(A,B) \neq d(B,A)$.
+
+\subsection*{4-opt (Double Bridge)}
+\textbf{Features:}
+\begin{itemize}
+    \item Does not revert tour segments (useful for ATSP).
+    \item Achieves $O(N^2)$ complexity with clever implementation.
+    \item Commonly combined with 2-opt for improved performance.
+\end{itemize}
+
+\section*{Solution Modification vs Construction}
+
+\begin{itemize}
+    \item Solution Modification (Local Search):
+    You start with a complete solution (e.g., a full TSP tour) and make local 
+    modifications  to iteratively improve it.
+    \item Solution Construction:  You start with an empty solution and 
+    incrementally build it, one piece at a time, until it is complete.
+\end{itemize}

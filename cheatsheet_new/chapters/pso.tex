@@ -1,0 +1,139 @@
+\section*{Particle Swarm Optimization (PSO)}
+
+Multi-agent black-box optimization framework inspired by
+social and roosting behavior of flocking birds
+
+\section*{Background: Boids!}
+
+Realistic model of coordinated animal motion, agents follow three simple rules:
+\begin{tightitemize}
+    \item Separation: steer to avoid crowding local flockmates
+    \item Alignment: steer towards the average heading of local flockmates 
+    \item Cohesion: steer to move toward the average position of local flockmates
+\end{tightitemize}
+
+Later, a \textbf{roost} was added. An attraction point in a simplified
+Boids-like simulation, such that each agent
+
+\begin{tightitemize}
+    \item Is attracted to the location of the roost 
+    \item Remembers where it was closer to it 
+    \item Tells its gang about its closest location to the roost
+\end{tightitemize}
+
+Eventually, (almost) all agents will land on the roost.
+
+What if the roost is the unknown global optimum (min/max) of a mathematical 
+function? And the "distance to the roost" is simply the quality of the function's value at that point?
+
+\section*{Black-box optimization with PSO}
+
+We do not know the formula for $f(x)$. All we can do is 
+"query" the function: provide an input $x$ and observe the output $f(x)$. 
+We must find the optimum by intelligently sampling the search space.
+
+PSO is a derivative-free, black-box optimization algorithm.
+
+\section*{Core Mechanic (In Words)}
+
+Swarm of particles are made, each particle $i$ represents a potential solution. 
+
+\begin{tightitemize}
+    \item Position $\xx_i \in \Rn$: Candidate solution of particle
+    \item Velocity $\vv_i \in \Rn$: Current direction and speed of particle 
+\end{tightitemize}
+
+Each particle also has a memory:
+\begin{tightitemize}
+    \item pbest, position with the best $f(x)$ particle $i$ ever visited
+    \item lbest, position with the best $f(x)$ any particle in $i$th social 
+    neighborhood ever visited (will be used later)
+    \item gbest, position with the best $f(x)$ any particle ever visited
+\end{tightitemize}
+
+At each time step, the particle updates its velocity and position based on 
+3 influences:
+\begin{tightitemize}
+    \item Inertia component: keep going where its going already
+    \item Personal component: pull towards pbest 
+    \item Social Component: pull towards gbest 
+\end{tightitemize}
+
+\section*{Core Mechanic (In Math) :)}
+\textbf{Velocity Update:} 
+$
+\vv_i(t+1) = \omega \vv_i(t) + c_1 r_1 (pbest_i - \xx_i(t)) + c_2 r_2 (gbest_i - \xx_i(t))
+$
+where 
+\begin{tightitemize}
+    \item $\omega$ is inertia weight (influence of old velocity)
+    \item $c_1,c_2$ are acceleration coefficients (weighting the "pull" of the personal and social components).
+    \item $r_1,r_2$ are random numbers, adding stochasticity to the search.
+\end{tightitemize}
+
+\textbf{Position Update:} 
+Just move. 
+$
+\xx_i(t+1) = \xx_i(t) + \vv_i(t+1)
+$
+
+\section*{Parameters and Variants}
+
+\textbf{What if only one agent?}
+If left alone, each individual agent would behave like a stochastic hill-climber when moving
+in the direction of a local optimum, and then it will have a quite hard time to escape it.
+
+\textbf{Neighborhood Topology} 
+
+There's no clear way tp know which topology is best. 
+
+\begin{tightitemize}
+    \item gbest (Global Best): Leads to fast convergence but can get trapped in local optima.
+    \item lbest (Local Best): Each particle is pulled toward the best solution found by its immediate topological neighbors. Slower but explores the space more effectively, making it better for complex, multi-modal problems.
+\end{tightitemize}
+
+\textbf{Acceleration Coefficients}
+
+The balance between $c_1, c_2$ two defines the swarm's search strategy:
+
+\begin{tightitemize}
+    \item $c_1 > 0, c_2 = 0$: (Independent). No social influence, set of independent hill climbers 
+    \item $c_1 = 0, c_2 > 0$: (Social-only). No personal memory, entire swarm is pulled 
+    only towards single best-known point. One stochastic hill-climber 
+    \item $c_1 = c_2 > 0$: Attracted to average of pbest, gbest 
+    \item $c_2 > c_1$: (More Social). Better for unimodal problems
+    \item $c_1 > c_2$ (More Personal). Better for multimodal problems
+\end{tightitemize}
+
+\textbf{Inertia Coefficient}
+
+The weight was added to control balance between exploration and exploitation:
+
+\begin{tightitemize}
+    \item $\omega \ge 1$: velocities increase over time, swarm diverges. Exploration.
+    \item $0 < \omega < 1$: particles decelerate, convergence depends on $c_1, c_2$. Explotation.
+\end{tightitemize}
+
+Constriction Coefficient: idk what this is, TODO understand it.
+
+\textbf{Fully Informed PSO (FIPS)}\\
+Like \textbf{lbest}, FIPS uses neighborhood information, but more democratically. 
+Instead of moving toward the single best particle, a particle is attracted to a 
+weighted average of all neighbors' personal bests. This slows convergence slightly 
+but reduces the chance of getting stuck in local optima.
+
+\textbf{Binary / Discrete PSO}\\
+PSO can be adapted for binary search spaces ($\mathbf{x}_i \in \{0,1\}^n$):
+\begin{tightitemize}
+    \item Velocity $\mathbf{v}_i$ is continuous and updated normally.
+    \item Each component $v_{ij}$ is interpreted as the probability of a 1.
+    \item Probability is computed via a sigmoid: $s(v_{ij}) = 1/(1+e^{-v_{ij}})$.
+    \item Positions are updated stochastically:
+    $
+        x_{ij}(t+1) = 
+        \begin{cases} 
+            1 & \text{if rand() < } s(v_{ij}(t+1)) \\ 
+            0 & \text{otherwise} 
+        \end{cases}
+    $
+\end{tightitemize}

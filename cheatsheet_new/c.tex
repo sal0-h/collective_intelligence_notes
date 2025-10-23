@@ -1,0 +1,105 @@
+\documentclass[8pt,a4paper,twocolumn]{article}
+
+% ---------------------------
+% Preamble (put this at the top)
+% ---------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{graphicx}
+\usepackage{tcolorbox, tabularx}
+\usepackage[left=0.5cm,right=0.5cm,top=0.5cm,bottom=0.5cm]{geometry}
+\usepackage{enumitem, booktabs, array, multicol, microtype, titlesec}
+
+
+% Compact section and subsection styles
+\usepackage{titlesec}
+
+% --- Section titles ---
+\titleformat{\section}
+  {\fontsize{8}{8}\bfseries}   % font size & style
+  {\thesection.}{0.3em}{}      % number + spacing
+\titlespacing{\section}{0pt}{2pt}{1pt} % left, before, after spacing
+
+% --- Subsection titles ---
+\titleformat{\subsection}
+  {\fontsize{7}{7}\bfseries}   % smaller than section
+  {\thesubsection.}{0.3em}{} 
+\titlespacing{\subsection}{0pt}{1pt}{0pt} % tighter spacing
+
+% --- Optional: subsubsection (tiny headers) ---
+\titleformat{\subsubsection}
+  {\fontsize{6}{6}\bfseries\itshape}
+  {\thesubsubsection.}{0.3em}{} 
+\titlespacing{\subsubsection}{0pt}{1pt}{0pt}
+
+% Formatting tweaks
+\setlength{\parindent}{0pt}
+\renewcommand{\normalsize}{\fontsize{8}{8}\selectfont}
+\titlespacing{\section}{0pt}{0pt}{2pt}
+\titlespacing{\subsection}{0pt}{0pt}{1pt}
+\renewcommand{\arraystretch}{0.9}
+
+% Common math shortcuts
+\newcommand{\xx}{\mathbf{x}} \newcommand{\vv}{\mathbf{v}}
+\newcommand{\uu}{\mathbf{u}} \newcommand{\ww}{\mathbf{w}}
+\newcommand{\ee}{\mathbf{e}} \newcommand{\cc}{\mathbf{c}}
+\newcommand{\Rn}{\mathbb{R}^n} \newcommand{\Rm}{\mathbb{R}^m}
+\newcommand{\At}{A^{T}} \newcommand{\Ai}{A^{-1}}
+\newcommand{\rank}{\mathrm{rank}\,} \newcommand{\Span}{\mathrm{Span}\,}
+\newcommand{\Col}{\mathrm{Col}\,} \newcommand{\Row}{\mathrm{Row}\,}
+\newcommand{\Nul}{\mathrm{Nul}\,}
+\newcommand{\parx}{\frac{\partial z}{\partial x}}
+\newcommand{\pary}{\frac{\partial z}{\partial y}}
+\newtheorem{remark}{Remark}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newtheorem{property}[theorem]{Property}      % Shares counter with theorem
+\newtheorem{proposition}[theorem]{Proposition} % Shares counter with theorem
+
+
+\setlist[itemize]{
+    leftmargin=*,       % use full column width
+    % topsep=1pt,         % space above/below list
+    % itemsep=0pt,        % space between items
+    % parsep=0pt,         % space between paragraphs within items
+    partopsep=0pt       % space added when list starts a paragraph
+}
+
+% Safe compact list environment
+\newlist{tightitemize}{itemize}{1}
+\setlist[tightitemize]{
+    label=\textbullet,     % make sure label is defined
+    leftmargin=*,           % full column width
+    topsep=1pt,
+    itemsep=0pt,
+    parsep=0pt,
+    partopsep=0pt,
+    labelwidth=*,           % fixes enumitem "undefined label" bug
+}
+
+
+
+% Optional: tighter paragraph spacing
+%\usepackage[parfill]{parskip}
+
+% ---------------------------
+% Body
+% ---------------------------
+\begin{document}
+
+% Compact all chapters into one
+\input{chapters/dynamical_systems}
+\input{chapters/iterated_maps}
+\input{chapters/cellular_automata}
+\input{chapters/networks}
+\input{chapters/swarm_intelligence}
+\input{chapters/pso}
+\input{chapters/optimization}
+\input{chapters/local_search}
+\input{chapters/robot}
+\input{chapters/task_allocation}
+
+\end{document}
