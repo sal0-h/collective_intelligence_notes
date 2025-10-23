@@ -56,7 +56,6 @@ For non-convex functions, the final local optimum depends on where we start from
 
 Optimization function represents the classification Error of a ML model during training,
 i.e., the total Loss on on training set 
-
 $
 \sum_{i=1}^{m}l(\hat{y}^i(\ww^i, \xx^i), y^i)
 $
@@ -64,34 +63,29 @@ $
 \textbf{Gradient Descent Procedure for OLSR}
 
 For a linear model with quadratic loss:
-
 $
 E(\mathbf{w}; X, Y) = \frac{1}{2} \sum_{i=1}^N (\mathbf{w}^\top x_i - y_i)^2
 $
 
 The gradient is:
-
 $
 \nabla E(\mathbf{w}) = \sum_{i=1}^N (\mathbf{w}^\top x_i - y_i)x_i
 $
 
 Gradient descent update:
-
 $
 \mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \alpha \sum_{i=1}^N (\mathbf{w}^{(t)\top} x_i - y_i)x_i
 $
 
-\begin{enumerate}[label=\arabic*.]
-    \item Initialize $\mathbf{w}^{(0)}$ (e.g., random or zero vector), $t \gets 0$.
+\begin{tightitemize}
+    \item Initialize $\mathbf{w}^{(0)}$ (e.g., random or zero vector), $t \gets 0$
     \item Repeat until convergence or maximum iterations $N$:
-    \begin{tightitemize}
-        \item Compute gradient: $\nabla E$
-        \item Choose step size $\alpha$ (fixed or adaptive)
-        \item Update parameters: $\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \alpha \nabla E$
-        \item If $\|\mathbf{w}^{(t+1)} - \mathbf{w}^{(t)}\| < \text{tolerance}$, break
-    \end{tightitemize}
-    \item Return $\mathbf{w}^{(t+1)}$ as the solution.
-\end{enumerate}
+          Compute gradient $\nabla E$, choose step size $\alpha$, update parameters:  
+          $\mathbf{w}^{(t+1)} = \mathbf{w}^{(t)} - \alpha \nabla E$,  
+          break if $\|\mathbf{w}^{(t+1)} - \mathbf{w}^{(t)}\| <$ tolerance
+    \item Return $\mathbf{w}^{(t+1)}$ as the solution
+\end{tightitemize}
+
 
 \section*{Batch vs Stochastic GD}
 
@@ -122,7 +116,6 @@ A popular optimizer combining two ideas:
     \item \textbf{Momentum ($\mathbf{m}_t$)}: exponentially weighted average of past gradients (1st moment) to determine direction.
     \item \textbf{Adaptive scaling ($\mathbf{v}_t$)}: exponentially weighted average of past squared gradients (2nd moment) to adapt learning rates per parameter.
 \end{tightitemize}
-Adam updates each weight using $\mathbf{m}_t$ for direction and $\mathbf{v}_t$ for adaptive step sizes.
 
 \section*{Comparing ADAM against PSO}
 

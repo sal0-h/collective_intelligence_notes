@@ -1,35 +1,22 @@
-\section*{Cellular Automata (CA)}
-
-\section*{CA properties}
-
 A \textbf{Cellular Automaton} is a multi-dimensional discrete-time dynamical
 system that is defined by
 the principle of locality. properties:
 
-\begin{description}
-    \item[Systems's state is $n$-dimensional] $\xx(t) = (x_1(t), \dots, x_n(t))$
-    \item[Discrete time]: updated at discrete time steps
-    \item[State components arranged according to a given topology]
-    \item[Neighborhood defined based on topology]: $N(x_i) =
-    {x_j : x_j \text{ is a neighbor of }x_i}$
+\begin{tightitemize}
+  \item \textbf{System state:} $n$-dimensional $\xx(t) = (x_1(t), \dots, x_n(t))$
+  \item \textbf{Time:} Discrete updates at time steps
+  \item \textbf{Topology:} State components arranged according to a given topology
+  \item \textbf{Neighborhood $N(x_i)$:} Set of neighbors influencing $x_i$  
+        Example 1D: $N(x_i)=\{x_{i-1},x_i,x_{i+1}\}$  
+        Example 2D:
+        
+        Von Neumann: cell + 4 neighbors (up, down, left, right)
+        
+        Moore: cell + 8 surrounding neighbors (3x3 box)
+  \item \textbf{Local updates:} Each $x_i$ evolves according to a function of itself and neighbors:  
+        $F_i: S(N(x_i)) \to S_i$, where $S_i$ is the possible states of $x_i$ and $S$ are states of neighbors
+\end{tightitemize}
 
-    Neighborhood is the range for a cell to be influenced by other cells
-
-    1D Example: $N(x_i)={x_{i-1},x_i,x_{i+1}}$
-
-    2D Examples:
-    \begin{tightitemize}
-        \item Von Neumann: The cell and its 4 neighbors (up, down, left, right).
-        \item Moore: The cell and its 8 surrounding neighbors (a 3x3 box).
-    \end{tightitemize}
-
-    \item[Locality of updates]: Each state component $x_i$ evolves according to a rule
-    that depends only on its own state and those of its neighbors in $N(x_i)$.
-
-    Local-state transition function, $F_i: S(N(x_i)) \to S_i$ where $S_i$
-    s the set of values that state component $x_i$ can take,
-    and $S$ is the state values from the cells in the neighborhood set.
-\end{description}
 
 \section*{Lattices and Boundaries:}
 \textbf{Infinite/adaptive lattice}: The grid grows as the pattern propagates
@@ -67,40 +54,20 @@ For Wolfram's 1D CA: $S = \{0, 1\}$ (so $k=2$) and the neighborhood is $r=1$ (i.
 
 Using our formula, the number of rules = $k^{\left(k^{|N|}\right)} = 2^{\left(2^3\right)} = 2^8 = 256$.
 
-
-\section*{Four classes of Behavior and Chaos}
-
-\renewcommand{\arraystretch}{1.3}
-\begin{table}[h!]
-\centering
-\begin{tabular}{|c|p{4cm}|p{4cm}|c|}
-\hline
-\textbf{Class} & \textbf{Behavior} & \textbf{Information Dynamics} & \textbf{Lyapunov Exponent} \\
-\hline
-1 & Evolves to a simple, stable, homogeneous state (all 0s or all 1s). & Small changes die; information is lost. & $\lambda \le 0$ \\
-\hline
-2 & Evolves to simple periodic structures (stripes, oscillators). & Small changes may persist locally but do not spread. & $\lambda = 0$ \\
-\hline
-3 & Evolves to chaotic, aperiodic patterns (e.g., Rule 30). & Small changes spread out and affect distant regions. & $\lambda > 0$ \\
-\hline
-4 & Creates complex, localized, moving structures. (e.g., Rule 110 is \textbf{Turing complete}) & Small changes may or may not spread; irregular but structured dynamics. & $\lambda > 0$ (tends to 0) \\
-\hline
-\end{tabular}
-\end{table}
-
-\section*{Game of Life}
-
 \begin{tightitemize}
-    \item 2D Lattice of identical cells
-    \item Moore neighborhood
-    \item 2 states: dead or alive
-    \item The 4 Rules:
-    \begin{description}
-        \item[Loneliness] A live cell with $<2$ live neighbors dies.
-        \item[Overcrowding] A live cell with $>3$ live neighbors dies.
-        \item[Survival] A live cell with 2 or 3 live neighbors lives on.
-        \item[Reproduction] A dead cell with exactly 3 live neighbors becomes alive.
-    \end{description}
-    \item Garden of Eden: A pattern that can only exist as initial pattern. In other
-words, no parent could possibly produce the pattern.
+  \item \textbf{Class 1:} Evolves to a simple, stable, homogeneous state (all 0s or all 1s).  
+        Information dynamics: Small changes die; information is lost.  
+        Lyapunov exponent: $\lambda \le 0$
+  
+  \item \textbf{Class 2:} Evolves to simple periodic structures (stripes, oscillators).  
+        Information dynamics: Small changes may persist locally but do not spread.  
+        Lyapunov exponent: $\lambda = 0$
+  
+  \item \textbf{Class 3:} Evolves to chaotic, aperiodic patterns (e.g., Rule 30).  
+        Information dynamics: Small changes spread out and affect distant regions.  
+        Lyapunov exponent: $\lambda > 0$
+  
+  \item \textbf{Class 4:} Creates complex, localized, moving structures (e.g., Rule 110 is \textbf{Turing complete}).  
+        Information dynamics: Small changes may or may not spread; irregular but structured dynamics.  
+        Lyapunov exponent: $\lambda > 0$ (tends to 0)
 \end{tightitemize}

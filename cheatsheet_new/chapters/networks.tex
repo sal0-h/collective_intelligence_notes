@@ -1,44 +1,11 @@
 \section*{Networks}
 
-For Undirected graphs:
-\begin{tightitemize}
-    \item Node degree $k_i$: number of edges adjacent to 
-    node $i$
-    \item Handshake theorem: let $L$ be the number of edges.
-    Then $L = \frac{1}{2}\sum_{i=1}^{N}k_i$
-    \item Average degree: $\langle k \rangle = \frac{2L}{N}$
-\end{tightitemize}
+For Undirected graphs, Average degree: $\langle k \rangle = \frac{2L}{N}$
 
-For Directed Graphs:
-\begin{tightitemize}
-    \item In-degree: number of edges going into node 
-    \item Out-degree: number of edges going out of the node 
-    \item Total degree $k_i = k_i^\text{in} + k_i^\text{out}$
-    \item Average degree (either in or out): $\frac{L}{N}$
-\end{tightitemize}
+For Directed Graphs: Average degree (either in or out): $\frac{L}{N}$
 
 \textbf{Degree Distribution:} $p_k = \frac{N_k}{N}$ where $N_k$ is number of 
 nodes with degree $k$
-
-\textbf{Complete graph:} every possible edge is there. $L = \frac{N(N-1)}{2}$
-
-\begin{tightitemize}
-    \item \textbf{Walk:} A sequence of vertices (and corresponding edges) such that consecutive vertices are adjacent. 
-    Vertices and edges may repeat. For example, $(1 \to 2 \to 1)$ is a valid walk.
-
-    \item \textbf{Path:} A walk in which all vertices (and therefore all edges) are distinct. 
-    For example, $(1 \to 2 \to 3)$ is a path, but $(1 \to 2 \to 1)$ is not.
-
-    \item \textbf{Length:} The number of edges in a walk or path, or the sum of their weights if the graph is weighted.
-
-    \item \textbf{Distance:} The length of the shortest path between two vertices. 
-    In unweighted graphs, this equals the minimal number of hops; in weighted graphs, the minimal total weight.
-
-    \item \textbf{Shortest Path:} A path whose length equals the distance between its endpoints.
-
-    \item \textbf{Diameter:} The maximum distance between any two vertices in the graph; equivalently, 
-    the length of the longest shortest path.
-\end{tightitemize}
 
 \textbf{Connected graph} is an undirected graph where there exists a path between 
 every pair of nodes
@@ -52,8 +19,6 @@ For directed graphs there is
 
 If the largest component in a graph has a large fraction of the nodes,
 we call it the giant component
-
-\section*{Two representations for graphs}
 
 \begin{tightitemize}
     \item Adjacency list: a mapping from each node to it's neighborhood

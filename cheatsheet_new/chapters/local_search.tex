@@ -7,22 +7,22 @@ They are iterative algorithms that each step consider a single current state, an
 improve it by moving to one of its neighbor state that has a better evaluation 
 score
 
-\begin{itemize}
+\begin{tightitemize}
     \item Search for an improvement is done in local neighborhood only 
     \item Hill climbing, gradient are specific instances of LS
-\end{itemize}
+\end{tightitemize}
 
 Local Search  methods work with complete problem
 states/solutions, $s$, i.e., all necessary variables are assigned
 
 \section*{Neighborhoods in discrete domains}
 
-\begin{itemize}
+\begin{tightitemize}
     \item 1-flip N for 0-1 vectors
     \item 2-swap N for permutation vectors 
     \item k-exchange N, $N(s)$ of a state $s$ is the set of states $s'$ that differ
     from $s$ up to $k$ solution components/values
-\end{itemize}
+\end{tightitemize}
 
 A small neighborhood is fast to search at each step, but the search is less powerful.
 
@@ -54,19 +54,18 @@ Local Search for the TSP relies on defining a neighborhood
 \textbf{Note:} Necessary for Asymmetric TSP (ATSP) where $d(A,B) \neq d(B,A)$.
 
 \subsection*{4-opt (Double Bridge)}
-\textbf{Features:}
-\begin{itemize}
+\begin{tightitemize}
     \item Does not revert tour segments (useful for ATSP).
     \item Achieves $O(N^2)$ complexity with clever implementation.
     \item Commonly combined with 2-opt for improved performance.
-\end{itemize}
+\end{tightitemize}
 
 \section*{Solution Modification vs Construction}
 
-\begin{itemize}
+\begin{tightitemize}
     \item Solution Modification (Local Search):
     You start with a complete solution (e.g., a full TSP tour) and make local 
     modifications  to iteratively improve it.
     \item Solution Construction:  You start with an empty solution and 
     incrementally build it, one piece at a time, until it is complete.
-\end{itemize}
+\end{tightitemize}
